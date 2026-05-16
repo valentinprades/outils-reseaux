@@ -1,0 +1,3602 @@
+[
+  {
+    "q": "Quel est le masque de sous-réseau par défaut pour /24 ?",
+    "o": [
+      "255.255.255.0",
+      "255.255.0.0",
+      "255.0.0.0",
+      "255.255.255.128"
+    ],
+    "a": "255.255.255.0",
+    "h": "Cela correspond à 3 octets entièrement à 1 (8+8+8 bits).",
+    "e": "Le préfixe /24 indique que les 24 premiers bits sont dédiés au réseau. En décimal, cela donne 3 fois 255 (11111111.11111111.11111111.00000000)."
+  },
+  {
+    "q": "Quel est le masque de sous-réseau pour /16 ?",
+    "o": [
+      "255.255.0.0",
+      "255.255.255.0",
+      "255.0.0.0",
+      "255.255.240.0"
+    ],
+    "a": "255.255.0.0",
+    "h": "Cela correspond à la moitié d'une adresse IPv4 (2 octets).",
+    "e": "/16 signifie que les 16 premiers bits sont à 1. Cela remplit exactement les deux premiers octets : 255.255.0.0."
+  },
+  {
+    "q": "Quel est le masque de sous-réseau pour /8 ?",
+    "o": [
+      "255.0.0.0",
+      "255.255.0.0",
+      "255.255.255.0",
+      "0.0.0.0"
+    ],
+    "a": "255.0.0.0",
+    "h": "Un seul octet est réservé pour le réseau.",
+    "e": "/8 signifie que seuls les 8 premiers bits définissent le réseau, ce qui donne 255.0.0.0. C'était le masque par défaut de l'ancienne Classe A."
+  },
+  {
+    "q": "Combien d'adresses utilisables dans un /30 ?",
+    "o": [
+      "2",
+      "4",
+      "6",
+      "1"
+    ],
+    "a": "2",
+    "h": "Le bloc contient 4 IP au total, mais il faut retirer le réseau et le broadcast.",
+    "e": "Un /30 laisse 2 bits pour les hôtes (32-30=2). 2^2 = 4 adresses totales. On retire l'adresse réseau et le broadcast, il reste 2 IP utilisables."
+  },
+  {
+    "q": "Quel masque correspond au CIDR /25 ?",
+    "o": [
+      "255.255.255.128",
+      "255.255.255.192",
+      "255.255.255.0",
+      "255.255.255.240"
+    ],
+    "a": "255.255.255.128",
+    "h": "C'est un /24 avec un bit supplémentaire emprunté.",
+    "e": "Le 25ème bit vaut 128 (10000000 en binaire sur le dernier octet). Le masque est donc 255.255.255.128."
+  },
+  {
+    "q": "Quel CIDR pour 255.255.255.192 ?",
+    "o": [
+      "/26",
+      "/25",
+      "/27",
+      "/24"
+    ],
+    "a": "/26",
+    "h": "192 en binaire s'écrit 11000000 (2 bits à 1).",
+    "e": "Le masque de base est /24. On ajoute les 2 bits du dernier octet (128+64=192). 24 + 2 = /26."
+  },
+  {
+    "q": "Adresse de broadcast de 192.168.1.0/24 ?",
+    "o": [
+      "192.168.1.255",
+      "192.168.1.0",
+      "192.168.1.1",
+      "192.168.1.254"
+    ],
+    "a": "192.168.1.255",
+    "h": "C'est la toute dernière adresse possible dans ce sous-réseau.",
+    "e": "Dans un /24, la partie hôte est le dernier octet entier. Pour le broadcast, on met tous les bits hôtes à 1, ce qui donne .255."
+  },
+  {
+    "q": "Première adresse utilisable de 10.0.0.0/8 ?",
+    "o": [
+      "10.0.0.1",
+      "10.0.0.0",
+      "10.1.1.1",
+      "10.255.255.254"
+    ],
+    "a": "10.0.0.1",
+    "h": "C'est l'adresse juste après l'ID réseau.",
+    "e": "L'ID réseau est 10.0.0.0. La première IP utilisable est toujours ID + 1, donc 10.0.0.1."
+  },
+  {
+    "q": "Hôtes max dans un /24 ?",
+    "o": [
+      "254",
+      "256",
+      "255",
+      "65534"
+    ],
+    "a": "254",
+    "h": "256 combinaisons moins l'adresse réseau et le broadcast.",
+    "e": "Un /24 a 8 bits hôtes. 2^8 = 256. On retire 2 adresses réservées (réseau et broadcast), soit 254 hôtes."
+  },
+  {
+    "q": "Masque wildcard pour /24 ?",
+    "o": [
+      "0.0.0.255",
+      "255.255.255.0",
+      "0.0.0.0",
+      "0.0.255.255"
+    ],
+    "a": "0.0.0.255",
+    "h": "C'est l'inverse binaire du masque 255.255.255.0.",
+    "e": "Le wildcard inverse les bits du masque. Là où le masque a 255 (11111111), le wildcard a 0. Là où le masque a 0, le wildcard a 255."
+  },
+  {
+    "q": "Quel CIDR pour 255.255.255.252 ?",
+    "o": [
+      "/30",
+      "/29",
+      "/28",
+      "/31"
+    ],
+    "a": "/30",
+    "h": "Il ne reste que 2 bits pour la partie hôte (255 - 252 = 3).",
+    "e": "252 en binaire est 11111100. Cela fait 6 bits à 1 dans le dernier octet. 24 + 6 = 30."
+  },
+  {
+    "q": "127.0.0.1 correspond à ?",
+    "o": [
+      "Loopback",
+      "Broadcast",
+      "Multicast",
+      "Passerelle"
+    ],
+    "a": "Loopback",
+    "h": "C'est l'adresse de votre propre machine (localhost).",
+    "e": "C'est l'adresse de boucle locale. Elle permet de tester la pile TCP/IP sans passer par la carte réseau physique."
+  },
+  {
+    "q": "169.254.x.x est une adresse...",
+    "o": [
+      "APIPA",
+      "Privée",
+      "Publique",
+      "Multicast"
+    ],
+    "a": "APIPA",
+    "h": "C'est l'adresse que Windows s'auto-attribue quand le DHCP échoue.",
+    "e": "APIPA (Automatic Private IP Addressing) est utilisé quand aucun serveur DHCP ne répond. Ce n'est pas routable sur Internet."
+  },
+  {
+    "q": "Adresse privée RFC 1918 ?",
+    "o": [
+      "192.168.1.50",
+      "8.8.8.8",
+      "172.50.1.1",
+      "11.0.0.1"
+    ],
+    "a": "192.168.1.50",
+    "h": "C'est l'adresse classique des box internet à la maison.",
+    "e": "192.168.x.x est la plage privée de classe C. Les autres sont publiques (8.8.8.8) ou hors plage privée (172.50...)."
+  },
+  {
+    "q": "Adresse privée Classe B ?",
+    "o": [
+      "172.16.5.1",
+      "172.15.5.1",
+      "172.32.5.1",
+      "192.168.0.1"
+    ],
+    "a": "172.16.5.1",
+    "h": "La plage va de 172.16.0.0 à 172.31.255.255.",
+    "e": "Seul 172.16.5.1 est dans la plage RFC1918 (172.16-31). 172.15 et 172.32 sont des IP publiques."
+  },
+  {
+    "q": "Quelle IP est invalide ?",
+    "o": [
+      "300.168.1.1",
+      "10.0.0.1",
+      "192.168.0.254",
+      "223.255.255.255"
+    ],
+    "a": "300.168.1.1",
+    "h": "Un octet ne peut pas dépasser une certaine valeur sur 8 bits.",
+    "e": "La valeur maximale d'un octet est 255. 300 est impossible en IPv4."
+  },
+  {
+    "q": "CIDR pour 255.255.255.224 ?",
+    "o": [
+      "/27",
+      "/26",
+      "/28",
+      "/25"
+    ],
+    "a": "/27",
+    "h": "224 correspond à 3 bits à 1 (128+64+32).",
+    "e": "Masque de base /24 + 3 bits dans le dernier octet = /27."
+  },
+  {
+    "q": "Hôtes utilisables dans un /23 ?",
+    "o": [
+      "510",
+      "512",
+      "254",
+      "1022"
+    ],
+    "a": "510",
+    "h": "C'est le double d'un /24 (512), moins réseau et broadcast.",
+    "e": "Un /23 a 9 bits hôtes (32-23). 2^9 = 512. On retire les 2 adresses réservées = 510 hôtes."
+  },
+  {
+    "q": "Plage Classe A Privée ?",
+    "o": [
+      "10.0.0.0/8",
+      "172.16.0.0/12",
+      "192.168.0.0/16",
+      "127.0.0.0/8"
+    ],
+    "a": "10.0.0.0/8",
+    "h": "Commence par 10.",
+    "e": "Toute adresse commençant par 10.x.x.x est privée (RFC 1918 Classe A)."
+  },
+  {
+    "q": "224.0.0.1 est une adresse...",
+    "o": [
+      "Multicast",
+      "Broadcast",
+      "Unicast",
+      "Anycast"
+    ],
+    "a": "Multicast",
+    "h": "La classe D (224-239) est réservée à cet usage.",
+    "e": "C'est une adresse de Multicast réservée, utilisée pour s'adresser à tous les hôtes sur le segment local."
+  },
+  {
+    "q": "Masque pour /20 ?",
+    "o": [
+      "255.255.240.0",
+      "255.255.255.0",
+      "255.240.0.0",
+      "255.255.224.0"
+    ],
+    "a": "255.255.240.0",
+    "h": "/16 + 4 bits dans le 3ème octet.",
+    "e": "4 bits à 1 donnent 11110000, soit 128+64+32+16 = 240. Donc 255.255.240.0."
+  },
+  {
+    "q": "Dernière utilisable de 192.168.1.0/24 ?",
+    "o": [
+      "192.168.1.254",
+      "192.168.1.255",
+      "192.168.1.253",
+      "192.168.2.0"
+    ],
+    "a": "192.168.1.254",
+    "h": "C'est juste avant le broadcast (.255).",
+    "e": "Le broadcast est la dernière adresse du bloc (192.168.1.255). La dernière IP utilisable est Broadcast - 1."
+  },
+  {
+    "q": "Rôle du masque ?",
+    "o": [
+      "Séparer Réseau/Hôte",
+      "Crypter",
+      "Trouver MAC",
+      "Vitesse"
+    ],
+    "a": "Séparer Réseau/Hôte",
+    "h": "Il sert à savoir quelle partie de l'IP est fixe et quelle partie change.",
+    "e": "Le masque permet à l'ordinateur de savoir si une IP de destination est sur le même réseau local ou s'il doit passer par une passerelle."
+  },
+  {
+    "q": "ID réseau de 192.168.1.5/24 ?",
+    "o": [
+      "192.168.1.0",
+      "192.168.0.0",
+      "192.168.1.1",
+      "192.0.0.0"
+    ],
+    "a": "192.168.1.0",
+    "h": "Mettez la partie hôte à 0.",
+    "e": "Avec un /24, les 3 premiers octets sont le réseau. On garde 192.168.1 et on met le reste à 0."
+  },
+  {
+    "q": "Masque par défaut Classe B ?",
+    "o": [
+      "255.255.0.0",
+      "255.0.0.0",
+      "255.255.255.0",
+      "255.255.255.255"
+    ],
+    "a": "255.255.0.0",
+    "h": "La classe B a un préfixe naturel de /16.",
+    "e": "Classe A = /8, Classe B = /16 (255.255.0.0), Classe C = /24."
+  },
+  {
+    "q": "Longueur masque IPv4 ?",
+    "o": [
+      "32 bits",
+      "48 bits",
+      "64 bits",
+      "128 bits"
+    ],
+    "a": "32 bits",
+    "h": "Il a la même longueur qu'une adresse IP.",
+    "e": "Tout comme l'adresse IPv4, le masque est composé de 4 octets de 8 bits, soit 32 bits au total."
+  },
+  {
+    "q": "Quelle IP est publique ?",
+    "o": [
+      "8.8.8.8",
+      "192.168.1.1",
+      "10.0.0.5",
+      "172.16.0.1"
+    ],
+    "a": "8.8.8.8",
+    "h": "C'est un serveur DNS très connu de Google.",
+    "e": "Les adresses commençant par 192.168, 10, et 172.16-31 sont privées. 8.8.8.8 est routable sur Internet."
+  },
+  {
+    "q": "IP utilisables dans un /31 ?",
+    "o": [
+      "2",
+      "0",
+      "1",
+      "4"
+    ],
+    "a": "2",
+    "h": "C'est une exception pour les liaisons point-à-point.",
+    "e": "Selon la RFC 3021, sur les liens point-à-point, un /31 permet d'utiliser l'adresse réseau et le broadcast comme adresses d'hôtes."
+  },
+  {
+    "q": "172.17.0.1/16 : quel réseau ?",
+    "o": [
+      "172.17.0.0",
+      "172.16.0.0",
+      "172.0.0.0",
+      "172.17.0.1"
+    ],
+    "a": "172.17.0.0",
+    "h": "Le masque /16 fige les deux premiers octets.",
+    "e": "On applique le masque 255.255.0.0. Les deux premiers nombres (172.17) sont conservés, le reste passe à 0."
+  },
+  {
+    "q": "Wildcard de /30 ?",
+    "o": [
+      "0.0.0.3",
+      "0.0.0.1",
+      "0.0.0.255",
+      "0.0.0.7"
+    ],
+    "a": "0.0.0.3",
+    "h": "Inverse de 255.255.255.252.",
+    "e": "255 - 252 = 3. Le wildcard est 0.0.0.3."
+  },
+  {
+    "q": "Quelle est la plage de la Classe C ?",
+    "o": [
+      "192-223",
+      "128-191",
+      "1-126",
+      "224-239"
+    ],
+    "a": "192-223",
+    "h": "Regardez le premier octet. C'est la classe la plus utilisée pour les petits réseaux.",
+    "e": "La Classe C va de 192.0.0.0 à 223.255.255.255."
+  },
+  {
+    "q": "Quelle est la plage de la Classe D ?",
+    "o": [
+      "224-239",
+      "192-223",
+      "240-255",
+      "1-126"
+    ],
+    "a": "224-239",
+    "h": "C'est la classe réservée au Multicast.",
+    "e": "La Classe D (224 à 239) est utilisée pour la diffusion multicast et n'est pas utilisée pour les hôtes classiques."
+  },
+  {
+    "q": "Quelle est la plage de la Classe E ?",
+    "o": [
+      "240-255",
+      "224-239",
+      "1-126",
+      "128-191"
+    ],
+    "a": "240-255",
+    "h": "C'est la dernière plage, réservée et expérimentale.",
+    "e": "La Classe E (240 à 255) est réservée pour un usage futur ou la recherche."
+  },
+  {
+    "q": "L'adresse 0.0.0.0 représente...",
+    "o": [
+      "Toutes les adresses",
+      "Le broadcast",
+      "Le loopback",
+      "Une erreur"
+    ],
+    "a": "Toutes les adresses",
+    "h": "On la voit souvent dans la table de routage comme 'route par défaut'.",
+    "e": "Elle signifie 'n'importe quel réseau' ou 'route par défaut' (quad-zero route)."
+  },
+  {
+    "q": "Combien de sous-réseaux /25 dans un /24 ?",
+    "o": [
+      "2",
+      "4",
+      "8",
+      "1"
+    ],
+    "a": "2",
+    "h": "Un /24 contient 256 adresses, un /25 en contient 128.",
+    "e": "En passant de /24 à /25, on emprunte 1 bit. 2^1 = 2 sous-réseaux."
+  },
+  {
+    "q": "Combien d'IP dans un /22 ?",
+    "o": [
+      "1024",
+      "512",
+      "2048",
+      "256"
+    ],
+    "a": "1024",
+    "h": "C'est quatre fois plus gros qu'un /24.",
+    "e": "Un /22 a 10 bits d'hôtes (32-22). 2^10 = 1024 adresses."
+  },
+  {
+    "q": "IP 128.0.0.1 appartient à quelle classe ?",
+    "o": [
+      "B",
+      "A",
+      "C",
+      "D"
+    ],
+    "a": "B",
+    "h": "La Classe A s'arrête à 126 (ou 127).",
+    "e": "La Classe B commence à 128 et finit à 191."
+  },
+  {
+    "q": "Le masque 255.255.255.248 correspond à...",
+    "o": [
+      "/29",
+      "/28",
+      "/30",
+      "/27"
+    ],
+    "a": "/29",
+    "h": "248 = 11111000 (5 bits à 1).",
+    "e": "On a les 24 bits de base + 5 bits dans le dernier octet = 29 bits."
+  },
+  {
+    "q": "Quelle commande Linux affiche les IP ?",
+    "o": [
+      "ip addr",
+      "ipconfig",
+      "show ip",
+      "netstat"
+    ],
+    "a": "ip addr",
+    "h": "ipconfig est pour Windows.",
+    "e": "'ip addr' (ou 'ifconfig' sur les vieux systèmes) affiche les interfaces et adresses sous Linux."
+  },
+  {
+    "q": "Une adresse IPv6 Link-Local commence par...",
+    "o": [
+      "fe80",
+      "2001",
+      "fc00",
+      "ff00"
+    ],
+    "a": "fe80",
+    "h": "Elle est comparable à l'adresse APIPA en IPv4.",
+    "e": "FE80::/10 est le préfixe pour les adresses de lien local, obligatoires sur toute interface IPv6."
+  },
+  {
+    "q": "Une adresse IPv6 Global Unicast commence souvent par...",
+    "o": [
+      "2000::/3",
+      "fe80",
+      "fd00",
+      "ff00"
+    ],
+    "a": "2000::/3",
+    "h": "Ce sont les adresses routables sur Internet (le '2' ou le '3').",
+    "e": "La plage 2000::/3 est allouée pour les adresses publiques mondiales (Global Unicast)."
+  },
+  {
+    "q": "Quelle est l'adresse de loopback IPv6 ?",
+    "o": [
+      "::1",
+      "127.0.0.1",
+      "fe80::1",
+      "::"
+    ],
+    "a": "::1",
+    "h": "Beaucoup de zéros et un 1 à la fin.",
+    "e": "::1 est l'équivalent IPv6 de 127.0.0.1 (localhost)."
+  },
+  {
+    "q": "Que signifie '::' en IPv6 ?",
+    "o": [
+      "Une suite de zéros",
+      "Une erreur",
+      "Le broadcast",
+      "Le masque"
+    ],
+    "a": "Une suite de zéros",
+    "h": "C'est une méthode de compression.",
+    "e": "Le double deux-points remplace une ou plusieurs séries consécutives de groupes de zéros pour raccourcir l'adresse."
+  },
+  {
+    "q": "Combien d'octets dans une adresse MAC ?",
+    "o": [
+      "6",
+      "4",
+      "8",
+      "12"
+    ],
+    "a": "6",
+    "h": "Elle s'écrit souvent sous la forme MM:MM:MM:SS:SS:SS.",
+    "e": "Une adresse MAC fait 48 bits, ce qui correspond à 6 octets (6 x 8 = 48)."
+  },
+  {
+    "q": "Partie OUI d'une MAC désigne...",
+    "o": [
+      "Le constructeur",
+      "Le numéro de série",
+      "Le pays",
+      "Le type"
+    ],
+    "a": "Le constructeur",
+    "h": "Ce sont les 3 premiers octets de l'adresse.",
+    "e": "Organizationally Unique Identifier : les 24 premiers bits identifient le fabricant de la carte réseau."
+  },
+  {
+    "q": "Masque /24 en binaire ?",
+    "o": [
+      "24 '1' suivis de 8 '0'",
+      "24 '0' suivis de 8 '1'",
+      "Alternance 1010...",
+      "Tout à 1"
+    ],
+    "a": "24 '1' suivis de 8 '0'",
+    "h": "La définition même du CIDR est le nombre de 1.",
+    "e": "Le masque met à 1 tous les bits de la partie réseau. /24 signifie donc vingt-quatre '1'."
+  },
+  {
+    "q": "Si masque = /26, quel est le saut (pas) ?",
+    "o": [
+      "64",
+      "32",
+      "128",
+      "16"
+    ],
+    "a": "64",
+    "h": "C'est la valeur du dernier bit à 1 dans le masque.",
+    "e": "Le masque termine par 11000000. Le dernier bit '1' est à la position 64. Les sous-réseaux avancent de 64 en 64."
+  },
+  {
+    "q": "Dans 192.168.1.0/30, quelle est l'IP broadcast ?",
+    "o": [
+      "192.168.1.3",
+      "192.168.1.255",
+      "192.168.1.4",
+      "192.168.1.1"
+    ],
+    "a": "192.168.1.3",
+    "h": "Un /30 a 4 adresses. Ça commence à .0.",
+    "e": "Les adresses sont .0, .1, .2, .3. La dernière (.3) est le broadcast."
+  },
+  {
+    "q": "IP 172.32.1.1 est...",
+    "o": [
+      "Publique",
+      "Privée",
+      "APIPA",
+      "Multicast"
+    ],
+    "a": "Publique",
+    "h": "Attention à la limite supérieure de la plage privée B (172.31).",
+    "e": "La plage privée B s'arrête à 172.31.255.255. 172.32.x.x est donc public et routable sur Internet."
+  },
+  {
+    "q": "IP 192.168.256.1 est...",
+    "o": [
+      "Impossible",
+      "Privée",
+      "Publique",
+      "Classe E"
+    ],
+    "a": "Impossible",
+    "h": "Quelle est la valeur max d'un octet ?",
+    "e": "Un octet est compris entre 0 et 255. '256' n'existe pas en IPv4."
+  },
+  {
+    "q": "Broadcast dirigé (Directed Broadcast) ?",
+    "o": [
+      "Vers un sous-réseau spécifique",
+      "Vers tous",
+      "Vers soi-même",
+      "Vers Internet"
+    ],
+    "a": "Vers un sous-réseau spécifique",
+    "h": "Exemple: Envoyer à 192.168.5.255 alors que je suis dans le 10.0.0.0.",
+    "e": "C'est un paquet envoyé à l'adresse de broadcast d'un réseau distant. Il est routé jusqu'au réseau cible puis diffusé."
+  },
+  {
+    "q": "Le masque 255.255.255.240 laisse combien d'IP ?",
+    "o": [
+      "16",
+      "14",
+      "32",
+      "30"
+    ],
+    "a": "16",
+    "h": "256 - 240 = ?",
+    "e": "La taille totale du bloc (Magic Number) est 256 - 240 = 16 adresses."
+  },
+  {
+    "q": "Une IP finissant par .0 est toujours...",
+    "o": [
+      "Ça dépend du masque",
+      "Le réseau",
+      "Le broadcast",
+      "Un hôte"
+    ],
+    "a": "Ça dépend du masque",
+    "h": "Imaginez un réseau /16 ou /23.",
+    "e": "Dans 192.168.0.0/23, l'adresse 192.168.1.0 est une adresse d'hôte valide (au milieu du bloc)."
+  },
+  {
+    "q": "Quel est le masque de sous-réseau pour /22 ?",
+    "o": [
+      "255.255.252.0",
+      "255.255.248.0",
+      "255.255.254.0",
+      "255.255.240.0"
+    ],
+    "a": "255.255.252.0",
+    "h": "22 bits = 8 + 8 + 6. Il faut calculer la valeur de 6 bits à 1.",
+    "e": "11111100 en binaire vaut 252 (255 - 3). Le masque est 255.255.252.0."
+  },
+  {
+    "q": "Combien d'hôtes dans un /16 ?",
+    "o": [
+      "65534",
+      "65536",
+      "254",
+      "16382"
+    ],
+    "a": "65534",
+    "h": "Un /16 laisse 16 bits pour les hôtes. 2^16 = 65536.",
+    "e": "2^16 = 65 536 adresses totales. On retire réseau et broadcast, il reste 65 534 hôtes."
+  },
+  {
+    "q": "L'adresse 8.8.4.4 est...",
+    "o": [
+      "Publique",
+      "Privée",
+      "Google DNS",
+      "A et C"
+    ],
+    "a": "A et C",
+    "h": "C'est le DNS secondaire de Google.",
+    "e": "C'est une adresse publique routable, appartenant à Google (service DNS)."
+  },
+  {
+    "q": "Quel protocole attribue les IP ?",
+    "o": [
+      "DHCP",
+      "DNS",
+      "ARP",
+      "NAT"
+    ],
+    "a": "DHCP",
+    "h": "Dynamic Host Configuration Protocol.",
+    "e": "Le DHCP permet de distribuer automatiquement des configurations IP (Adresse, Masque, Passerelle, DNS) aux clients."
+  },
+  {
+    "q": "Durée de bail DHCP ?",
+    "o": [
+      "Temps de validité de l'IP",
+      "Temps de réponse",
+      "Ping max",
+      "Vitesse"
+    ],
+    "a": "Temps de validité de l'IP",
+    "h": "C'est une location temporaire.",
+    "e": "Le bail (lease) définit combien de temps un client peut utiliser l'adresse IP avant de devoir demander un renouvellement."
+  },
+  {
+    "q": "Le masque /32 est utilisé pour...",
+    "o": [
+      "Une route d'hôte",
+      "Un lien WAN",
+      "Un LAN",
+      "Le broadcast"
+    ],
+    "a": "Une route d'hôte",
+    "h": "Il ne laisse aucune place pour d'autres hôtes.",
+    "e": "Un masque /32 désigne une adresse IP unique précise. On l'utilise souvent pour les interfaces de Loopback ou les routes d'hôtes statiques."
+  },
+  {
+    "q": "Différence entre /24 et /25 ?",
+    "o": [
+      "/25 a moitié moins d'hôtes",
+      "/25 a plus d'hôtes",
+      "Aucune",
+      "C'est l'inverse"
+    ],
+    "a": "/25 a moitié moins d'hôtes",
+    "h": "Plus le masque est grand (/25 > /24), plus le réseau est petit.",
+    "e": "Un /24 a 256 IP. Un /25 en a 128. Chaque bit ajouté au masque divise la taille du réseau par 2."
+  },
+  {
+    "q": "Combien de couches OSI ?",
+    "o": [
+      "7",
+      "4",
+      "5",
+      "6"
+    ],
+    "a": "7",
+    "h": "Physique, Liaison, Réseau, Transport, Session, Présentation, Application.",
+    "e": "Le modèle OSI standardise la communication réseau en 7 couches distinctes."
+  },
+  {
+    "q": "Couche 3 OSI ?",
+    "o": [
+      "Réseau",
+      "Transport",
+      "Liaison",
+      "Physique"
+    ],
+    "a": "Réseau",
+    "h": "C'est là où opèrent les routeurs et l'adresse IP.",
+    "e": "La couche Réseau (Network) gère l'adressage logique et le routage des paquets."
+  },
+  {
+    "q": "Couche 2 OSI ?",
+    "o": [
+      "Liaison de données",
+      "Physique",
+      "Réseau",
+      "Session"
+    ],
+    "a": "Liaison de données",
+    "h": "C'est là où opèrent les switchs et l'adresse MAC.",
+    "e": "La couche Liaison (Data Link) gère le transfert physique des données (trames) sur le média, l'adressage MAC et la détection d'erreurs."
+  },
+  {
+    "q": "Couche 4 OSI ?",
+    "o": [
+      "Transport",
+      "Réseau",
+      "Session",
+      "Application"
+    ],
+    "a": "Transport",
+    "h": "Elle gère la fiabilité et les ports (TCP/UDP).",
+    "e": "La couche Transport assure la segmentation des données et le contrôle de flux (TCP/UDP)."
+  },
+  {
+    "q": "PDU Couche 2 ?",
+    "o": [
+      "Trame",
+      "Paquet",
+      "Segment",
+      "Bit"
+    ],
+    "a": "Trame",
+    "h": "En anglais : Frame.",
+    "e": "L'unité de donnée de la couche 2 (Liaison) est la Trame (Frame), qui encapsule le paquet."
+  },
+  {
+    "q": "PDU Couche 3 ?",
+    "o": [
+      "Paquet",
+      "Trame",
+      "Segment",
+      "Donnée"
+    ],
+    "a": "Paquet",
+    "h": "C'est ce que route un routeur.",
+    "e": "L'unité de donnée de la couche 3 (Réseau) est le Paquet (Packet), qui contient l'IP source et destination."
+  },
+  {
+    "q": "Protocole Couche 4 fiable ?",
+    "o": [
+      "TCP",
+      "UDP",
+      "IP",
+      "ICMP"
+    ],
+    "a": "TCP",
+    "h": "Il vérifie que les données sont bien arrivées.",
+    "e": "TCP (Transmission Control Protocol) est orienté connexion et garantit la livraison des données (accusés de réception)."
+  },
+  {
+    "q": "Protocole Couche 4 rapide ?",
+    "o": [
+      "UDP",
+      "TCP",
+      "HTTP",
+      "SSH"
+    ],
+    "a": "UDP",
+    "h": "Il n'attend pas d'accusé de réception. Idéal pour le streaming.",
+    "e": "UDP (User Datagram Protocol) est sans connexion. Il est plus rapide mais ne garantit pas la livraison."
+  },
+  {
+    "q": "Protocole Couche 7 ?",
+    "o": [
+      "HTTP",
+      "TCP",
+      "IP",
+      "Ethernet"
+    ],
+    "a": "HTTP",
+    "h": "C'est celui que vous utilisez pour voir ce site.",
+    "e": "HTTP, DNS, FTP, SMTP sont des protocoles de la couche Application (7), proches de l'utilisateur."
+  },
+  {
+    "q": "Équipement Couche 2 ?",
+    "o": [
+      "Switch",
+      "Routeur",
+      "Hub",
+      "PC"
+    ],
+    "a": "Switch",
+    "h": "Il lit les adresses MAC pour diriger les trames.",
+    "e": "Le Switch (commutateur) travaille principalement avec les adresses MAC au niveau de la couche Liaison."
+  },
+  {
+    "q": "Équipement Couche 3 ?",
+    "o": [
+      "Routeur",
+      "Switch",
+      "Hub",
+      "AP"
+    ],
+    "a": "Routeur",
+    "h": "Il interconnecte différents réseaux via des adresses IP.",
+    "e": "Le Routeur prend des décisions de routage basées sur les adresses IP (Couche 3)."
+  },
+  {
+    "q": "Couche du cryptage ?",
+    "o": [
+      "Présentation",
+      "Session",
+      "Application",
+      "Transport"
+    ],
+    "a": "Présentation",
+    "h": "Elle s'occupe du formatage des données (JPEG, ASCII, Chiffrement).",
+    "e": "La couche Présentation (6) gère la syntaxe, le chiffrement et la compression des données."
+  },
+  {
+    "q": "Adresse MAC est...",
+    "o": [
+      "Physique",
+      "Logique",
+      "Virtuelle",
+      "Temporaire"
+    ],
+    "a": "Physique",
+    "h": "Elle est gravée sur la carte réseau.",
+    "e": "L'adresse MAC est l'identifiant physique unique matériel de l'interface réseau."
+  },
+  {
+    "q": "Adresse IP est...",
+    "o": [
+      "Logique",
+      "Physique",
+      "Permanente",
+      "Matérielle"
+    ],
+    "a": "Logique",
+    "h": "Elle peut changer selon le réseau où vous êtes.",
+    "e": "L'adresse IP est une adresse logique configurée par logiciel, qui dépend du réseau auquel on est connecté."
+  },
+  {
+    "q": "Protocole IP vers MAC ?",
+    "o": [
+      "ARP",
+      "DNS",
+      "DHCP",
+      "RARP"
+    ],
+    "a": "ARP",
+    "h": "Address Resolution Protocol.",
+    "e": "ARP permet de trouver l'adresse MAC associée à une adresse IP connue sur le réseau local."
+  },
+  {
+    "q": "Couche 1 OSI ?",
+    "o": [
+      "Physique",
+      "Liaison",
+      "Réseau",
+      "Session"
+    ],
+    "a": "Physique",
+    "h": "Câbles, ondes, signaux électriques.",
+    "e": "La couche Physique gère la transmission des bits bruts sur le support de communication."
+  },
+  {
+    "q": "PDU Couche 4 ?",
+    "o": [
+      "Segment",
+      "Paquet",
+      "Trame",
+      "Bit"
+    ],
+    "a": "Segment",
+    "h": "TCP découpe les données en morceaux.",
+    "e": "L'unité de donnée de la couche 4 (Transport) est le Segment (pour TCP) ou le Datagramme (pour UDP)."
+  },
+  {
+    "q": "Couche du dialogue ?",
+    "o": [
+      "Session",
+      "Transport",
+      "Réseau",
+      "Liaison"
+    ],
+    "a": "Session",
+    "h": "Elle gère l'ouverture et la fermeture de la communication entre applications.",
+    "e": "La couche Session (5) gère l'établissement, la gestion et la terminaison des sessions entre les applications."
+  },
+  {
+    "q": "Couches modèle TCP/IP ?",
+    "o": [
+      "4",
+      "7",
+      "5",
+      "3"
+    ],
+    "a": "4",
+    "h": "Il condense le modèle OSI.",
+    "e": "Le modèle TCP/IP (DoD) a 4 couches : Application, Transport, Internet, et Accès Réseau."
+  },
+  {
+    "q": "Couche Internet TCP/IP équivaut à OSI...",
+    "o": [
+      "Réseau",
+      "Transport",
+      "Liaison",
+      "Physique"
+    ],
+    "a": "Réseau",
+    "h": "C'est là où vit le protocole IP.",
+    "e": "La couche Internet du modèle TCP/IP correspond exactement à la couche Réseau (3) du modèle OSI."
+  },
+  {
+    "q": "Sens encapsulation ?",
+    "o": [
+      "7 vers 1",
+      "1 vers 7",
+      "Aléatoire",
+      "Centre"
+    ],
+    "a": "7 vers 1",
+    "h": "Quand on envoie des données, on ajoute des en-têtes.",
+    "e": "L'encapsulation descend les couches : Application -> Transport -> Réseau -> Liaison -> Physique."
+  },
+  {
+    "q": "Sens décapsulation ?",
+    "o": [
+      "1 vers 7",
+      "7 vers 1",
+      "Statique",
+      "Jamais"
+    ],
+    "a": "1 vers 7",
+    "h": "Quand on reçoit des données, on retire les en-têtes.",
+    "e": "La décapsulation remonte les couches à la réception : Physique -> Liaison -> Réseau -> Transport -> Application."
+  },
+  {
+    "q": "Sous-couches Liaison ?",
+    "o": [
+      "LLC et MAC",
+      "IP et TCP",
+      "Bit et Byte",
+      "ARP et RARP"
+    ],
+    "a": "LLC et MAC",
+    "h": "La norme IEEE 802 divise la couche 2 en deux.",
+    "e": "La couche Liaison est divisée en LLC (Logical Link Control - logiciel) et MAC (Media Access Control - matériel)."
+  },
+  {
+    "q": "Protocole non routable ?",
+    "o": [
+      "NetBIOS",
+      "IP",
+      "IPv6",
+      "IPX"
+    ],
+    "a": "NetBIOS",
+    "h": "Ancien protocole Windows qui ne traverse pas les routeurs par défaut.",
+    "e": "NetBIOS est un protocole de couche 2/5 qui n'a pas d'adressage hiérarchique comme IP, donc il ne passe pas les routeurs."
+  },
+  {
+    "q": "Où est vérifié le FCS ?",
+    "o": [
+      "Couche 2",
+      "Couche 7",
+      "Couche 3",
+      "Couche 1"
+    ],
+    "a": "Couche 2",
+    "h": "Le Frame Check Sequence est à la fin de la trame.",
+    "e": "Le FCS est vérifié au niveau de la couche Liaison (2) pour s'assurer que la trame n'a pas été corrompue."
+  },
+  {
+    "q": "Flag TCP début connexion ?",
+    "o": [
+      "SYN",
+      "ACK",
+      "FIN",
+      "RST"
+    ],
+    "a": "SYN",
+    "h": "Synchronize.",
+    "e": "Le flag SYN est envoyé pour initier une connexion TCP (première étape du 3-way handshake)."
+  },
+  {
+    "q": "Flag TCP fin connexion ?",
+    "o": [
+      "FIN",
+      "SYN",
+      "PSH",
+      "URG"
+    ],
+    "a": "FIN",
+    "h": "Finish.",
+    "e": "Le flag FIN est utilisé pour demander la fermeture propre d'une connexion TCP."
+  },
+  {
+    "q": "ICMP est quelle couche ?",
+    "o": [
+      "Réseau",
+      "Transport",
+      "Liaison",
+      "Application"
+    ],
+    "a": "Réseau",
+    "h": "Il aide le protocole IP à signaler les erreurs.",
+    "e": "Bien qu'encapsulé dans IP, ICMP est considéré comme un protocole de couche 3 (Réseau) car il gère la signalisation du réseau."
+  },
+  {
+    "q": "Prise RJ45 : quelle couche ?",
+    "o": [
+      "Physique",
+      "Liaison",
+      "Réseau",
+      "Transport"
+    ],
+    "a": "Physique",
+    "h": "C'est un élément purement matériel.",
+    "e": "Les câbles et connecteurs font partie de la couche Physique (1)."
+  },
+  {
+    "q": "Qui gère le séquencement ?",
+    "o": [
+      "TCP",
+      "UDP",
+      "IP",
+      "Ethernet"
+    ],
+    "a": "TCP",
+    "h": "Il remet les paquets dans l'ordre grâce aux numéros de séquence.",
+    "e": "TCP utilise des numéros de séquence pour réassembler les segments dans le bon ordre à l'arrivée."
+  },
+  {
+    "q": "Quel protocole mappe MAC vers IP ?",
+    "o": [
+      "RARP",
+      "ARP",
+      "DNS",
+      "DHCP"
+    ],
+    "a": "RARP",
+    "h": "L'inverse d'ARP.",
+    "e": "RARP (Reverse ARP) permettait à une machine de connaître son IP à partir de sa MAC (obsolète, remplacé par DHCP)."
+  },
+  {
+    "q": "Quel champ IP évite les boucles ?",
+    "o": [
+      "TTL",
+      "TOS",
+      "Fragment",
+      "Version"
+    ],
+    "a": "TTL",
+    "h": "Time To Live.",
+    "e": "Le TTL est décrémenté par chaque routeur. S'il atteint 0, le paquet est détruit, évitant qu'il tourne à l'infini."
+  },
+  {
+    "q": "Quelle couche gère le format JPEG ?",
+    "o": [
+      "Présentation",
+      "Application",
+      "Session",
+      "Transport"
+    ],
+    "a": "Présentation",
+    "h": "C'est une question de format de fichier.",
+    "e": "La couche Présentation (6) est responsable de l'encodage et du format des données (Images, Vidéos, Texte)."
+  },
+  {
+    "q": "Un Hub est de quelle couche ?",
+    "o": [
+      "Physique",
+      "Liaison",
+      "Réseau",
+      "Toutes"
+    ],
+    "a": "Physique",
+    "h": "C'est un simple répéteur électrique.",
+    "e": "Le Hub ne lit pas les données, il se contente de régénérer le signal électrique sur tous les ports (Couche 1)."
+  },
+  {
+    "q": "Le 'Three-Way Handshake' est...",
+    "o": [
+      "SYN, SYN-ACK, ACK",
+      "SYN, ACK, SYN",
+      "FIN, ACK, FIN",
+      "PING, PONG"
+    ],
+    "a": "SYN, SYN-ACK, ACK",
+    "h": "C'est la poignée de main pour établir une connexion TCP.",
+    "e": "Client envoie SYN, Serveur répond SYN-ACK, Client confirme ACK. La connexion est établie."
+  },
+  {
+    "q": "Quelle est la taille d'une en-tête TCP min ?",
+    "o": [
+      "20 octets",
+      "8 octets",
+      "64 octets",
+      "12 octets"
+    ],
+    "a": "20 octets",
+    "h": "C'est la même taille minimale que l'en-tête IP.",
+    "e": "L'en-tête TCP standard fait 20 octets (sans options)."
+  },
+  {
+    "q": "Quelle est la taille d'une en-tête UDP ?",
+    "o": [
+      "8 octets",
+      "20 octets",
+      "12 octets",
+      "4 octets"
+    ],
+    "a": "8 octets",
+    "h": "UDP est beaucoup plus simple et léger que TCP.",
+    "e": "L'en-tête UDP ne fait que 8 octets (Source, Destination, Longueur, Checksum)."
+  },
+  {
+    "q": "Le champ 'Window' dans TCP sert au...",
+    "o": [
+      "Contrôle de flux",
+      "Séquencement",
+      "Adressage",
+      "Cryptage"
+    ],
+    "a": "Contrôle de flux",
+    "h": "Il dit 'combien de données je peux recevoir maintenant'.",
+    "e": "Le fenêtrage (Windowing) permet au récepteur de dire à l'émetteur combien de données il peut accepter avant d'avoir besoin d'une pause."
+  },
+  {
+    "q": "Quel protocole gère les groupes Multicast ?",
+    "o": [
+      "IGMP",
+      "ICMP",
+      "SNMP",
+      "BGP"
+    ],
+    "a": "IGMP",
+    "h": "Internet Group Management Protocol.",
+    "e": "IGMP permet aux hôtes de signaler aux routeurs qu'ils veulent recevoir le trafic d'un groupe multicast spécifique."
+  },
+  {
+    "q": "La fragmentation se produit à la couche...",
+    "o": [
+      "Réseau",
+      "Liaison",
+      "Transport",
+      "Application"
+    ],
+    "a": "Réseau",
+    "h": "Quand un paquet IP est trop gros pour passer.",
+    "e": "Si un paquet est plus grand que le MTU de l'interface, la couche Réseau (IP) le découpe en fragments."
+  },
+  {
+    "q": "Qu'est-ce que le MTU ?",
+    "o": [
+      "Maximum Transmission Unit",
+      "Max Transfer Ultra",
+      "Media Time Unit",
+      "Mode Test Unit"
+    ],
+    "a": "Maximum Transmission Unit",
+    "h": "C'est la taille max d'un paquet sur une interface.",
+    "e": "Le MTU définit la taille maximale (en octets) du paquet que la couche 2 peut transporter (généralement 1500 pour Ethernet)."
+  },
+  {
+    "q": "Quel PDU est utilisé par UDP ?",
+    "o": [
+      "Datagramme",
+      "Segment",
+      "Trame",
+      "Paquet"
+    ],
+    "a": "Datagramme",
+    "h": "Terme spécifique pour UDP.",
+    "e": "On parle de Segment pour TCP et de Datagramme pour UDP."
+  },
+  {
+    "q": "Le CSMA/CD est utilisé par...",
+    "o": [
+      "Ethernet",
+      "Wi-Fi",
+      "Token Ring",
+      "FDDI"
+    ],
+    "a": "Ethernet",
+    "h": "C'est la méthode historique de gestion des collisions sur câble.",
+    "e": "Carrier Sense Multiple Access / Collision Detection est l'algo d'Ethernet (Half-Duplex) pour gérer l'accès au média."
+  },
+  {
+    "q": "Le CSMA/CA est utilisé par...",
+    "o": [
+      "Wi-Fi",
+      "Ethernet",
+      "Fibre",
+      "Bluetooth"
+    ],
+    "a": "Wi-Fi",
+    "h": "En Wi-Fi, on ne peut pas détecter les collisions, on essaie de les éviter (Avoidance).",
+    "e": "Le Wi-Fi utilise CSMA/CA (Collision Avoidance) car il ne peut pas écouter et émettre en même temps."
+  },
+  {
+    "q": "Quelle couche gère le voltage ?",
+    "o": [
+      "Physique",
+      "Liaison",
+      "Réseau",
+      "Transport"
+    ],
+    "a": "Physique",
+    "h": "+5V, -5V, signaux optiques...",
+    "e": "La définition des niveaux de tension et des caractéristiques électriques relève de la couche Physique (1)."
+  },
+  {
+    "q": "Le protocole RIP est de type...",
+    "o": [
+      "Vecteur de distance",
+      "État de lien",
+      "Hybride",
+      "Statique"
+    ],
+    "a": "Vecteur de distance",
+    "h": "Il ne connaît que la distance (sauts) et la direction.",
+    "e": "RIP est un protocole à Vecteur de Distance. Il ne connaît pas la carte complète du réseau, juste ses voisins."
+  },
+  {
+    "q": "Le protocole OSPF est de type...",
+    "o": [
+      "État de lien",
+      "Vecteur de distance",
+      "Hybride",
+      "Externe"
+    ],
+    "a": "État de lien",
+    "h": "Link-State. Il a une carte complète.",
+    "e": "OSPF est un protocole à État de Lien. Chaque routeur construit une carte complète (topologie) du réseau."
+  },
+  {
+    "q": "Le numéro de port se trouve dans...",
+    "o": [
+      "L'en-tête Transport",
+      "L'en-tête IP",
+      "La trame",
+      "La donnée"
+    ],
+    "a": "L'en-tête Transport",
+    "h": "TCP ou UDP.",
+    "e": "Les ports Source et Destination sont les premières informations des en-têtes TCP et UDP (Couche 4)."
+  },
+  {
+    "q": "L'adresse IP se trouve dans...",
+    "o": [
+      "L'en-tête Réseau",
+      "L'en-tête Ethernet",
+      "L'en-tête TCP",
+      "Le FCS"
+    ],
+    "a": "L'en-tête Réseau",
+    "h": "Couche 3.",
+    "e": "Les adresses IP Source et Destination sont dans l'en-tête du paquet IP (Couche 3)."
+  },
+  {
+    "q": "L'adresse MAC se trouve dans...",
+    "o": [
+      "L'en-tête Ethernet",
+      "L'en-tête IP",
+      "L'en-tête TCP",
+      "Le Payload"
+    ],
+    "a": "L'en-tête Ethernet",
+    "h": "Couche 2.",
+    "e": "Les adresses MAC Source et Destination sont dans l'en-tête de la trame Ethernet (Couche 2)."
+  },
+  {
+    "q": "Quel est le but du CRC/FCS ?",
+    "o": [
+      "Détecter les erreurs",
+      "Corriger les erreurs",
+      "Crypter",
+      "Router"
+    ],
+    "a": "Détecter les erreurs",
+    "h": "Cyclic Redundancy Check.",
+    "e": "Il sert à vérifier l'intégrité de la trame. Si le calcul ne correspond pas à la réception, la trame est jetée (il ne corrige pas)."
+  },
+  {
+    "q": "Quel équipement ne divise PAS les domaines de collision ?",
+    "o": [
+      "Hub",
+      "Switch",
+      "Routeur",
+      "Pont"
+    ],
+    "a": "Hub",
+    "h": "Tout le monde s'entend parler sur cet équipement.",
+    "e": "Dans un Hub, tout est répété sur tous les ports. Tout le monde est dans le même domaine de collision."
+  },
+  {
+    "q": "Quel mode de transmission permet d'envoyer et recevoir en même temps ?",
+    "o": [
+      "Full-Duplex",
+      "Half-Duplex",
+      "Simplex",
+      "Multiplex"
+    ],
+    "a": "Full-Duplex",
+    "h": "Comme le téléphone.",
+    "e": "Full-Duplex permet la transmission bidirectionnelle simultanée. Le Half-Duplex (Talkie-Walkie) est alterné."
+  },
+  {
+    "q": "La fibre optique relève de quelle couche ?",
+    "o": [
+      "Physique",
+      "Liaison",
+      "Réseau",
+      "Transport"
+    ],
+    "a": "Physique",
+    "h": "C'est un support de transmission.",
+    "e": "C'est un média de transmission physique, donc Couche 1."
+  },
+  {
+    "q": "Quel protocole de routage utilise le nombre de sauts ?",
+    "o": [
+      "RIP",
+      "OSPF",
+      "EIGRP",
+      "BGP"
+    ],
+    "a": "RIP",
+    "h": "Hop count.",
+    "e": "RIP utilise le nombre de routeurs à traverser (sauts) comme seule métrique pour choisir le meilleur chemin."
+  },
+  {
+    "q": "Quel protocole de routage est propriétaire Cisco (historiquement) ?",
+    "o": [
+      "EIGRP",
+      "OSPF",
+      "RIP",
+      "ISIS"
+    ],
+    "a": "EIGRP",
+    "h": "Enhanced Interior Gateway Routing Protocol.",
+    "e": "EIGRP a été créé par Cisco. Bien qu'ouvert partiellement plus tard, il reste très associé au matériel Cisco."
+  },
+  {
+    "q": "BGP est un protocole de type...",
+    "o": [
+      "EGP",
+      "IGP",
+      "Distance",
+      "Lien"
+    ],
+    "a": "EGP",
+    "h": "Exterior Gateway Protocol.",
+    "e": "BGP est le protocole utilisé pour router entre les systèmes autonomes (AS) sur Internet. C'est le seul EGP actuel."
+  },
+  {
+    "q": "Quel est l'AD (Distance Admin) par défaut d'une route statique ?",
+    "o": [
+      "1",
+      "0",
+      "110",
+      "120"
+    ],
+    "a": "1",
+    "h": "C'est la source la plus fiable après la connexion directe.",
+    "e": "La Distance Administrative définit la fiabilité. Connecté = 0, Statique = 1."
+  },
+  {
+    "q": "Quel est l'AD de OSPF ?",
+    "o": [
+      "110",
+      "90",
+      "120",
+      "1"
+    ],
+    "a": "110",
+    "h": "Valeur standard Cisco.",
+    "e": "L'AD par défaut pour OSPF est 110."
+  },
+  {
+    "q": "Quel est l'AD de RIP ?",
+    "o": [
+      "120",
+      "110",
+      "100",
+      "90"
+    ],
+    "a": "120",
+    "h": "C'est le moins fiable des IGP classiques.",
+    "e": "L'AD par défaut pour RIP est 120."
+  },
+  {
+    "q": "Port HTTP ?",
+    "o": [
+      "80",
+      "443",
+      "8080",
+      "21"
+    ],
+    "a": "80",
+    "h": "C'est le standard du Web non sécurisé.",
+    "e": "Le trafic Web HTTP utilise le port TCP 80 par défaut."
+  },
+  {
+    "q": "Port HTTPS ?",
+    "o": [
+      "443",
+      "80",
+      "22",
+      "8443"
+    ],
+    "a": "443",
+    "h": "C'est le standard du Web sécurisé.",
+    "e": "Le trafic Web sécurisé (SSL/TLS) utilise le port TCP 443."
+  },
+  {
+    "q": "Port SSH ?",
+    "o": [
+      "22",
+      "23",
+      "21",
+      "25"
+    ],
+    "a": "22",
+    "h": "Secure Shell.",
+    "e": "SSH utilise le port TCP 22 pour l'administration sécurisée à distance."
+  },
+  {
+    "q": "Port Telnet ?",
+    "o": [
+      "23",
+      "22",
+      "25",
+      "110"
+    ],
+    "a": "23",
+    "h": "L'ancêtre non sécurisé de SSH.",
+    "e": "Telnet utilise le port TCP 23 et transmet tout en texte clair (y compris les mots de passe)."
+  },
+  {
+    "q": "Port DNS ?",
+    "o": [
+      "53",
+      "25",
+      "67",
+      "123"
+    ],
+    "a": "53",
+    "h": "Résolution de noms.",
+    "e": "DNS utilise le port 53 (UDP pour les requêtes standard, TCP pour les transferts de zone)."
+  },
+  {
+    "q": "Ports DHCP ?",
+    "o": [
+      "67/68",
+      "20/21",
+      "80/443",
+      "110/25"
+    ],
+    "a": "67/68",
+    "h": "Serveur vers Client et Client vers Serveur.",
+    "e": "Le serveur DHCP écoute sur UDP 67, et le client répond sur UDP 68."
+  },
+  {
+    "q": "Port FTP commande ?",
+    "o": [
+      "21",
+      "20",
+      "22",
+      "23"
+    ],
+    "a": "21",
+    "h": "File Transfer Protocol (Control).",
+    "e": "FTP utilise le port 21 pour les commandes et le port 20 pour les données (mode actif)."
+  },
+  {
+    "q": "Port SMTP ?",
+    "o": [
+      "25",
+      "110",
+      "143",
+      "587"
+    ],
+    "a": "25",
+    "h": "Envoi de mails entre serveurs.",
+    "e": "SMTP (Simple Mail Transfer Protocol) utilise le port 25 pour le routage des mails."
+  },
+  {
+    "q": "Protocole réception mail ?",
+    "o": [
+      "POP3",
+      "SMTP",
+      "SNMP",
+      "FTP"
+    ],
+    "a": "POP3",
+    "h": "Post Office Protocol.",
+    "e": "POP3 (et IMAP) servent à récupérer les mails. SMTP sert à les envoyer."
+  },
+  {
+    "q": "Port RDP ?",
+    "o": [
+      "3389",
+      "5900",
+      "22",
+      "80"
+    ],
+    "a": "3389",
+    "h": "Remote Desktop Protocol (Microsoft).",
+    "e": "Le bureau à distance Windows utilise le port TCP 3389."
+  },
+  {
+    "q": "Ping utilise ?",
+    "o": [
+      "ICMP",
+      "TCP",
+      "UDP",
+      "IP"
+    ],
+    "a": "ICMP",
+    "h": "Ce n'est pas un protocole de transport (pas de port).",
+    "e": "Ping utilise ICMP (Internet Control Message Protocol), plus précisément les types Echo Request et Echo Reply."
+  },
+  {
+    "q": "Protocole Heure ?",
+    "o": [
+      "NTP",
+      "TIME",
+      "HTTP",
+      "SNMP"
+    ],
+    "a": "NTP",
+    "h": "Network Time Protocol.",
+    "e": "NTP permet de synchroniser l'horloge des équipements réseaux."
+  },
+  {
+    "q": "Transport DHCP ?",
+    "o": [
+      "UDP",
+      "TCP",
+      "IP",
+      "ICMP"
+    ],
+    "a": "UDP",
+    "h": "C'est rapide et utilise le broadcast.",
+    "e": "DHCP utilise UDP car il démarre souvent par une diffusion (Broadcast) et n'a pas besoin de connexion persistante."
+  },
+  {
+    "q": "Transport HTTP ?",
+    "o": [
+      "TCP",
+      "UDP",
+      "ICMP",
+      "ARP"
+    ],
+    "a": "TCP",
+    "h": "Il faut être sûr que la page web arrive entière.",
+    "e": "HTTP utilise TCP pour garantir que toutes les données de la page web sont bien reçues."
+  },
+  {
+    "q": "Protocole Supervision ?",
+    "o": [
+      "SNMP",
+      "SMTP",
+      "NTP",
+      "POP3"
+    ],
+    "a": "SNMP",
+    "h": "Simple Network Management Protocol.",
+    "e": "SNMP permet de surveiller et gérer les équipements réseaux (routeurs, switchs, etc.)."
+  },
+  {
+    "q": "Port IMAP ?",
+    "o": [
+      "143",
+      "110",
+      "25",
+      "22"
+    ],
+    "a": "143",
+    "h": "Pour lire les mails en les laissant sur le serveur.",
+    "e": "IMAP utilise le port 143. Contrairement à POP3, il synchronise les dossiers."
+  },
+  {
+    "q": "Port POP3 ?",
+    "o": [
+      "110",
+      "143",
+      "25",
+      "995"
+    ],
+    "a": "110",
+    "h": "Pour télécharger les mails en local.",
+    "e": "POP3 utilise le port 110 par défaut."
+  },
+  {
+    "q": "Port TFTP ?",
+    "o": [
+      "69",
+      "20",
+      "21",
+      "22"
+    ],
+    "a": "69",
+    "h": "Trivial FTP.",
+    "e": "TFTP utilise le port UDP 69. C'est une version simplifiée de FTP, souvent utilisée pour démarrer des équipements (PXE, Cisco)."
+  },
+  {
+    "q": "Port SMTPS/Submission ?",
+    "o": [
+      "587",
+      "25",
+      "110",
+      "143"
+    ],
+    "a": "587",
+    "h": "C'est le port standard pour l'envoi de mail authentifié par les clients.",
+    "e": "Bien que 465 ait été utilisé, le port 587 est le standard actuel pour la soumission de mails par les clients (Outlook, Thunderbird)."
+  },
+  {
+    "q": "Port SMB ?",
+    "o": [
+      "445",
+      "139",
+      "21",
+      "22"
+    ],
+    "a": "445",
+    "h": "Partage de fichiers Windows.",
+    "e": "SMB (Server Message Block) utilise le port TCP 445 sur les réseaux modernes (Direct SMB)."
+  },
+  {
+    "q": "Protocole VoIP ?",
+    "o": [
+      "SIP",
+      "RTP",
+      "TCP",
+      "UDP"
+    ],
+    "a": "SIP",
+    "h": "Session Initiation Protocol.",
+    "e": "SIP gère l'établissement de l'appel (la sonnerie). RTP transporte la voix."
+  },
+  {
+    "q": "HTTPS = HTTP + ...",
+    "o": [
+      "SSL/TLS",
+      "SSH",
+      "VPN",
+      "MD5"
+    ],
+    "a": "SSL/TLS",
+    "h": "Les certificats de sécurité.",
+    "e": "HTTPS encapsule HTTP dans un tunnel sécurisé SSL ou TLS."
+  },
+  {
+    "q": "Port MySQL ?",
+    "o": [
+      "3306",
+      "1433",
+      "5432",
+      "80"
+    ],
+    "a": "3306",
+    "h": "Base de données très populaire.",
+    "e": "Le port par défaut pour MySQL est 3306."
+  },
+  {
+    "q": "Port LDAP ?",
+    "o": [
+      "389",
+      "636",
+      "445",
+      "88"
+    ],
+    "a": "389",
+    "h": "Annuaire d'entreprise (Lightweight Directory...).",
+    "e": "LDAP (non sécurisé) utilise le port TCP 389."
+  },
+  {
+    "q": "Transport Voix ?",
+    "o": [
+      "RTP",
+      "SIP",
+      "TCP",
+      "HTTP"
+    ],
+    "a": "RTP",
+    "h": "Real-time Transport Protocol.",
+    "e": "RTP transporte le flux audio/vidéo en temps réel (sur UDP). SIP ne fait que la signalisation."
+  },
+  {
+    "q": "DNS Zone Transfer ?",
+    "o": [
+      "TCP",
+      "UDP",
+      "ICMP",
+      "HTTP"
+    ],
+    "a": "TCP",
+    "h": "Il faut de la fiabilité pour copier toute la base de données.",
+    "e": "Le transfert de zone (AXFR) entre serveurs DNS utilise TCP 53 pour s'assurer qu'aucune donnée n'est perdue."
+  },
+  {
+    "q": "Protocole texte clair ?",
+    "o": [
+      "Telnet",
+      "SSH",
+      "HTTPS",
+      "SFTP"
+    ],
+    "a": "Telnet",
+    "h": "Tous les autres sont chiffrés.",
+    "e": "Telnet est obsolète car il envoie tout (login/pass) en clair sur le réseau."
+  },
+  {
+    "q": "FTPS utilise ?",
+    "o": [
+      "SSL/TLS",
+      "SSH",
+      "VPN",
+      "HTTP"
+    ],
+    "a": "SSL/TLS",
+    "h": "FTP Secure.",
+    "e": "FTPS est du FTP passant par SSL/TLS. À ne pas confondre avec SFTP (SSH)."
+  },
+  {
+    "q": "SFTP utilise ?",
+    "o": [
+      "SSH",
+      "SSL",
+      "TLS",
+      "UDP"
+    ],
+    "a": "SSH",
+    "h": "SSH File Transfer Protocol.",
+    "e": "SFTP est un sous-système de SSH et utilise le port 22."
+  },
+  {
+    "q": "Port 123 ?",
+    "o": [
+      "NTP",
+      "DNS",
+      "DHCP",
+      "RPC"
+    ],
+    "a": "NTP",
+    "h": "1, 2, 3, l'heure tourne.",
+    "e": "NTP utilise le port UDP 123."
+  },
+  {
+    "q": "Quel est le port de LDAPS (Secure) ?",
+    "o": [
+      "636",
+      "389",
+      "443",
+      "993"
+    ],
+    "a": "636",
+    "h": "LDAP sur SSL.",
+    "e": "La version sécurisée de LDAP utilise le port 636."
+  },
+  {
+    "q": "Quel est le port de IMAPS ?",
+    "o": [
+      "993",
+      "143",
+      "995",
+      "110"
+    ],
+    "a": "993",
+    "h": "IMAP sur SSL.",
+    "e": "IMAP sécurisé utilise le port 993."
+  },
+  {
+    "q": "Quel est le port de POP3S ?",
+    "o": [
+      "995",
+      "110",
+      "993",
+      "25"
+    ],
+    "a": "995",
+    "h": "POP3 sur SSL.",
+    "e": "POP3 sécurisé utilise le port 995."
+  },
+  {
+    "q": "Port utilisé par BGP ?",
+    "o": [
+      "179",
+      "520",
+      "88",
+      "123"
+    ],
+    "a": "179",
+    "h": "C'est du TCP.",
+    "e": "BGP utilise le port TCP 179 pour établir ses sessions de peering."
+  },
+  {
+    "q": "Port utilisé par Syslog ?",
+    "o": [
+      "514",
+      "161",
+      "25",
+      "69"
+    ],
+    "a": "514",
+    "h": "Pour envoyer des logs.",
+    "e": "Le standard Syslog utilise le port UDP 514."
+  },
+  {
+    "q": "Quel protocole utilise le port 88 ?",
+    "o": [
+      "Kerberos",
+      "HTTP",
+      "SSH",
+      "BGP"
+    ],
+    "a": "Kerberos",
+    "h": "Authentification Windows Active Directory.",
+    "e": "Kerberos, le système d'authentification, utilise le port 88."
+  },
+  {
+    "q": "Port de MS-SQL Server ?",
+    "o": [
+      "1433",
+      "3306",
+      "5432",
+      "1521"
+    ],
+    "a": "1433",
+    "h": "Base de données Microsoft.",
+    "e": "SQL Server écoute par défaut sur le port 1433."
+  },
+  {
+    "q": "Port de PostgreSQL ?",
+    "o": [
+      "5432",
+      "3306",
+      "1433",
+      "1521"
+    ],
+    "a": "5432",
+    "h": "Base de données open source.",
+    "e": "Postgres utilise par défaut le port 5432."
+  },
+  {
+    "q": "Port de Oracle DB ?",
+    "o": [
+      "1521",
+      "3306",
+      "1433",
+      "5432"
+    ],
+    "a": "1521",
+    "h": "Base de données Oracle.",
+    "e": "Oracle Database utilise par défaut le port 1521."
+  },
+  {
+    "q": "Quel protocole utilise le port 49 ?",
+    "o": [
+      "TACACS+",
+      "RADIUS",
+      "SSH",
+      "Telnet"
+    ],
+    "a": "TACACS+",
+    "h": "Protocole Cisco AAA.",
+    "e": "TACACS+ utilise le port TCP 49. Il sépare l'authentification et l'autorisation, contrairement à RADIUS."
+  },
+  {
+    "q": "Quel protocole utilise les ports 1812/1813 ?",
+    "o": [
+      "RADIUS",
+      "TACACS+",
+      "LDAP",
+      "Kerberos"
+    ],
+    "a": "RADIUS",
+    "h": "Remote Authentication Dial-In User Service.",
+    "e": "RADIUS utilise UDP 1812 pour l'authentification et 1813 pour la comptabilité (Accounting)."
+  },
+  {
+    "q": "Port IKE (VPN IPsec) ?",
+    "o": [
+      "500",
+      "4500",
+      "1701",
+      "1723"
+    ],
+    "a": "500",
+    "h": "Pour négocier les clés VPN.",
+    "e": "IKE (Internet Key Exchange) utilise le port UDP 500 pour établir la phase 1 du tunnel IPsec."
+  },
+  {
+    "q": "Port L2TP ?",
+    "o": [
+      "1701",
+      "1723",
+      "500",
+      "1194"
+    ],
+    "a": "1701",
+    "h": "Layer 2 Tunneling Protocol.",
+    "e": "L2TP utilise le port UDP 1701."
+  },
+  {
+    "q": "Port PPTP ?",
+    "o": [
+      "1723",
+      "1701",
+      "443",
+      "1194"
+    ],
+    "a": "1723",
+    "h": "Ancien VPN Microsoft.",
+    "e": "PPTP utilise le port TCP 1723."
+  },
+  {
+    "q": "Port OpenVPN par défaut ?",
+    "o": [
+      "1194",
+      "443",
+      "500",
+      "1723"
+    ],
+    "a": "1194",
+    "h": "Il peut fonctionner en TCP ou UDP.",
+    "e": "OpenVPN utilise par défaut le port UDP 1194, mais peut être configuré sur n'importe quel port."
+  },
+  {
+    "q": "Qu'est-ce que le port 0 ?",
+    "o": [
+      "Réservé",
+      "Wildcard",
+      "Root",
+      "HTTP"
+    ],
+    "a": "Réservé",
+    "h": "On ne peut pas l'utiliser pour communiquer.",
+    "e": "Le port 0 est réservé par l'IANA. En programmation, spécifier le port 0 demande au système d'attribuer un port aléatoire disponible."
+  },
+  {
+    "q": "Port 161 est utilisé par...",
+    "o": [
+      "Agent SNMP",
+      "Manager SNMP",
+      "Trap SNMP",
+      "Syslog"
+    ],
+    "a": "Agent SNMP",
+    "h": "Pour interroger un équipement.",
+    "e": "L'agent SNMP (l'équipement surveillé) écoute sur le port UDP 161."
+  },
+  {
+    "q": "Port 162 est utilisé par...",
+    "o": [
+      "Trap SNMP",
+      "Agent SNMP",
+      "Syslog",
+      "NTP"
+    ],
+    "a": "Trap SNMP",
+    "h": "Pour recevoir les alertes.",
+    "e": "Le manager SNMP (le serveur) écoute sur le port UDP 162 pour recevoir les notifications (Traps)."
+  },
+  {
+    "q": "Quel protocole de fichier utilise le port 2049 ?",
+    "o": [
+      "NFS",
+      "SMB",
+      "FTP",
+      "AFP"
+    ],
+    "a": "NFS",
+    "h": "Network File System (Unix/Linux).",
+    "e": "NFS utilise le port 2049."
+  },
+  {
+    "q": "Port de contrôle IRC ?",
+    "o": [
+      "6667",
+      "8080",
+      "21",
+      "22"
+    ],
+    "a": "6667",
+    "h": "Vieux système de chat.",
+    "e": "IRC (Internet Relay Chat) utilise traditionnellement le port 6667."
+  },
+  {
+    "q": "HTTPS utilise quel protocole sous-jacent ?",
+    "o": [
+      "TLS",
+      "SSL",
+      "SSH",
+      "IPsec"
+    ],
+    "a": "TLS",
+    "h": "SSL est l'ancien nom, déprécié.",
+    "e": "TLS (Transport Layer Security) est le successeur sécurisé de SSL. On dit souvent SSL par habitude, mais c'est du TLS."
+  },
+  {
+    "q": "DHCPv6 utilise quels ports ?",
+    "o": [
+      "546/547",
+      "67/68",
+      "53/54",
+      "80/81"
+    ],
+    "a": "546/547",
+    "h": "C'est comme le v4, mais avec des chiffres plus grands.",
+    "e": "DHCPv6 utilise UDP 546 (Client) et 547 (Serveur)."
+  },
+  {
+    "q": "Port 194 est pour...",
+    "o": [
+      "IRC",
+      "BGP",
+      "SNMP",
+      "DNS"
+    ],
+    "a": "IRC",
+    "h": "Port réservé mais moins utilisé que le 6667.",
+    "e": "Le port 194 est officiellement réservé pour IRC, bien que le 6667 soit le standard de facto."
+  },
+  {
+    "q": "Quel est le port 'Alt' HTTP ?",
+    "o": [
+      "8080",
+      "8443",
+      "3128",
+      "8888"
+    ],
+    "a": "8080",
+    "h": "Souvent utilisé pour les proxys ou serveurs de dev.",
+    "e": "8080 est l'alternative standard au port 80."
+  },
+  {
+    "q": "Quel protocole utilise 520 ?",
+    "o": [
+      "RIP",
+      "OSPF",
+      "EIGRP",
+      "BGP"
+    ],
+    "a": "RIP",
+    "h": "Routing Information Protocol.",
+    "e": "RIP version 1 et 2 utilisent le port UDP 520."
+  },
+  {
+    "q": "H.323 est un protocole de...",
+    "o": [
+      "Visioconférence",
+      "Transfert",
+      "Mail",
+      "Web"
+    ],
+    "a": "Visioconférence",
+    "h": "Le concurrent de SIP.",
+    "e": "H.323 est une suite de protocoles pour la communication audio-visuelle sur IP."
+  },
+  {
+    "q": "Quel port pour VNC ?",
+    "o": [
+      "5900",
+      "3389",
+      "22",
+      "23"
+    ],
+    "a": "5900",
+    "h": "Prise en main à distance (souvent Linux).",
+    "e": "VNC utilise le port 5900 + N (où N est le numéro d'affichage)."
+  },
+  {
+    "q": "Port 5060 est pour...",
+    "o": [
+      "SIP non chiffré",
+      "SIP TLS",
+      "RTP",
+      "IAX"
+    ],
+    "a": "SIP non chiffré",
+    "h": "VoIP standard.",
+    "e": "Le port 5060 est utilisé pour les communications SIP non sécurisées (UDP/TCP)."
+  },
+  {
+    "q": "Port 5061 est pour...",
+    "o": [
+      "SIP TLS",
+      "SIP UDP",
+      "RTP",
+      "IAX"
+    ],
+    "a": "SIP TLS",
+    "h": "VoIP sécurisée (SIPS).",
+    "e": "Le port 5061 est utilisé pour SIP encapsulé dans TLS (SIPS)."
+  },
+  {
+    "q": "Protocole de résolution de nom NetBIOS ?",
+    "o": [
+      "WINS",
+      "DNS",
+      "DHCP",
+      "ARP"
+    ],
+    "a": "WINS",
+    "h": "L'ancêtre du DNS chez Microsoft.",
+    "e": "WINS (Windows Internet Name Service) résout les noms NetBIOS en adresses IP."
+  },
+  {
+    "q": "Switch divise...",
+    "o": [
+      "Collision",
+      "Broadcast",
+      "Réseau",
+      "Rien"
+    ],
+    "a": "Collision",
+    "h": "Chaque port est un domaine isolé.",
+    "e": "Un switch micro-segmente le réseau. Chaque port est son propre domaine de collision. Par contre, il propage le broadcast."
+  },
+  {
+    "q": "Routeur divise...",
+    "o": [
+      "Broadcast",
+      "Collision",
+      "Vitesse",
+      "Câbles"
+    ],
+    "a": "Broadcast",
+    "h": "Il ne laisse pas passer les diffusions (FF:FF...).",
+    "e": "Les routeurs bloquent les broadcasts par défaut, créant ainsi des domaines de broadcast distincts."
+  },
+  {
+    "q": "Commande route Windows ?",
+    "o": [
+      "route print",
+      "show ip",
+      "ip route",
+      "netstat"
+    ],
+    "a": "route print",
+    "h": "Affiche la table de routage.",
+    "e": "'route print' affiche la table de routage sous Windows. Sous Linux, c'est 'ip route' ou 'route -n'."
+  },
+  {
+    "q": "Tester chemin ?",
+    "o": [
+      "tracert",
+      "ping",
+      "dig",
+      "ipconfig"
+    ],
+    "a": "tracert",
+    "h": "Affiche les sauts (routeurs) traversés.",
+    "e": "'tracert' (Windows) ou 'traceroute' (Linux) affiche la liste des routeurs traversés jusqu'à la destination."
+  },
+  {
+    "q": "TTL ?",
+    "o": [
+      "Time To Live",
+      "Time To Load",
+      "Total",
+      "Type"
+    ],
+    "a": "Time To Live",
+    "h": "Durée de vie d'un paquet.",
+    "e": "Le TTL est un compteur dans le paquet IP qui diminue à chaque routeur traversé pour éviter les boucles infinies."
+  },
+  {
+    "q": "Câble droit ?",
+    "o": [
+      "PC à Switch",
+      "PC à PC",
+      "Switch à Switch",
+      "Routeur à Routeur"
+    ],
+    "a": "PC à Switch",
+    "h": "Pour connecter des équipements de couches différentes.",
+    "e": "Un câble droit relie des équipements de nature différente (ex: PC vers Switch). Pour des équipements identiques, on utilisait un câble croisé (avant l'Auto-MDIX)."
+  },
+  {
+    "q": "Fibre transmet ?",
+    "o": [
+      "Lumière",
+      "Électricité",
+      "Ondes",
+      "Son"
+    ],
+    "a": "Lumière",
+    "h": "Insensible aux perturbations électromagnétiques.",
+    "e": "La fibre optique transmet des données sous forme d'impulsions lumineuses dans du verre ou du plastique."
+  },
+  {
+    "q": "Taille MAC ?",
+    "o": [
+      "48 bits",
+      "32 bits",
+      "64 bits",
+      "16 bits"
+    ],
+    "a": "48 bits",
+    "h": "12 caractères hexadécimaux.",
+    "e": "Une adresse MAC fait 48 bits."
+  },
+  {
+    "q": "Taille IPv4 ?",
+    "o": [
+      "32 bits",
+      "48 bits",
+      "64 bits",
+      "128 bits"
+    ],
+    "a": "32 bits",
+    "h": "4 octets.",
+    "e": "Une adresse IPv4 fait 32 bits."
+  },
+  {
+    "q": "Taille IPv6 ?",
+    "o": [
+      "128 bits",
+      "64 bits",
+      "32 bits",
+      "256 bits"
+    ],
+    "a": "128 bits",
+    "h": "C'est énorme comparé à l'IPv4.",
+    "e": "Une adresse IPv6 fait 128 bits."
+  },
+  {
+    "q": "NAT ?",
+    "o": [
+      "Translation Adresse",
+      "Token",
+      "New Address",
+      "Native"
+    ],
+    "a": "Translation Adresse",
+    "h": "Network Address Translation.",
+    "e": "Le NAT permet de traduire une IP privée en IP publique pour aller sur Internet."
+  },
+  {
+    "q": "DNS ?",
+    "o": [
+      "Domain Name System",
+      "Dynamic",
+      "Data",
+      "Digital"
+    ],
+    "a": "Domain Name System",
+    "h": "L'annuaire d'Internet.",
+    "e": "Le DNS traduit les noms de domaine lisibles (google.com) en adresses IP numériques."
+  },
+  {
+    "q": "PDU TCP ?",
+    "o": [
+      "Segment",
+      "Paquet",
+      "Trame",
+      "Bit"
+    ],
+    "a": "Segment",
+    "h": "Couche 4.",
+    "e": "Les données encapsulées par TCP s'appellent des Segments."
+  },
+  {
+    "q": "Passerelle ?",
+    "o": [
+      "Sortie réseau",
+      "DNS",
+      "Mon IP",
+      "Masque"
+    ],
+    "a": "Sortie réseau",
+    "h": "L'adresse du routeur pour sortir du LAN.",
+    "e": "La passerelle par défaut (Default Gateway) est l'adresse IP du routeur qui permet de communiquer avec d'autres réseaux."
+  },
+  {
+    "q": "Loopback ?",
+    "o": [
+      "127.0.0.1",
+      "Câble",
+      "Erreur",
+      "Protocole"
+    ],
+    "a": "127.0.0.1",
+    "h": "Localhost.",
+    "e": "L'interface de boucle locale permet à un ordinateur de s'adresser à lui-même."
+  },
+  {
+    "q": "VLAN ?",
+    "o": [
+      "Virtual LAN",
+      "Video LAN",
+      "Very LAN",
+      "VPN"
+    ],
+    "a": "Virtual LAN",
+    "h": "Réseau Local Virtuel.",
+    "e": "Un VLAN permet de créer des réseaux logiques distincts sur un même switch physique."
+  },
+  {
+    "q": "Firewall ?",
+    "o": [
+      "Filtrer trafic",
+      "Router",
+      "Donner IP",
+      "Résoudre"
+    ],
+    "a": "Filtrer trafic",
+    "h": "Pare-feu.",
+    "e": "Un pare-feu contrôle et filtre le trafic entrant et sortant selon des règles de sécurité."
+  },
+  {
+    "q": "DHCP ?",
+    "o": [
+      "Dynamic Host Config",
+      "Domain Host",
+      "Dual Host",
+      "Data"
+    ],
+    "a": "Dynamic Host Config",
+    "h": "Protocol.",
+    "e": "Dynamic Host Configuration Protocol automatise la configuration IP."
+  },
+  {
+    "q": "SSID ?",
+    "o": [
+      "Nom Wi-Fi",
+      "Mosaïque",
+      "Clé",
+      "Protocole"
+    ],
+    "a": "Nom Wi-Fi",
+    "h": "Service Set Identifier.",
+    "e": "Le SSID est le nom technique d'un réseau Wi-Fi diffusé par la borne."
+  },
+  {
+    "q": "Câble entre 2 switchs ?",
+    "o": [
+      "Croisé",
+      "Droit",
+      "Optique",
+      "Coaxial"
+    ],
+    "a": "Croisé",
+    "h": "Équipements de même couche.",
+    "e": "Historiquement, on relie deux switchs avec un câble croisé (Crossover). Aujourd'hui, l'Auto-MDIX le gère automatiquement."
+  },
+  {
+    "q": "PoE ?",
+    "o": [
+      "Power over Ethernet",
+      "Point of Entry",
+      "Protocol of E",
+      "Power on"
+    ],
+    "a": "Power over Ethernet",
+    "h": "Électricité dans le câble réseau.",
+    "e": "Le PoE permet d'alimenter des équipements (téléphones, caméras) via le câble RJ45."
+  },
+  {
+    "q": "Commande MAC Windows ?",
+    "o": [
+      "ipconfig /all",
+      "ipconfig",
+      "mac",
+      "ping"
+    ],
+    "a": "ipconfig /all",
+    "h": "Il faut demander tous les détails.",
+    "e": "'ipconfig' seul ne montre que l'IP. '/all' montre aussi l'adresse physique (MAC)."
+  },
+  {
+    "q": "Unicast ?",
+    "o": [
+      "1 vers 1",
+      "1 vers Tous",
+      "1 vers Groupe",
+      "Tous vers Tous"
+    ],
+    "a": "1 vers 1",
+    "h": "Communication point à point.",
+    "e": "L'Unicast est une communication d'une source unique vers une destination unique."
+  },
+  {
+    "q": "CSMA/CD ?",
+    "o": [
+      "Collision Detection",
+      "Collision Avoidance",
+      "Code Division",
+      "Cable Data"
+    ],
+    "a": "Collision Detection",
+    "h": "Utilisé sur Ethernet filaire.",
+    "e": "La détection de collision permettait de gérer l'accès sur les anciens réseaux en Hub. Avec les switchs (Full Duplex), ce n'est plus utilisé."
+  },
+  {
+    "q": "Distance admin RIP ?",
+    "o": [
+      "120",
+      "110",
+      "1",
+      "90"
+    ],
+    "a": "120",
+    "h": "C'est une valeur de fiabilité.",
+    "e": "RIP a une AD de 120, ce qui le rend moins prioritaire qu'OSPF (110) ou EIGRP (90)."
+  },
+  {
+    "q": "Full-Duplex ?",
+    "o": [
+      "Envoi/Reçoit en même temps",
+      "L'un ou l'autre",
+      "Réception seule",
+      "Envoi seul"
+    ],
+    "a": "Envoi/Reçoit en même temps",
+    "h": "Comme une conversation téléphonique.",
+    "e": "Le Full-Duplex permet d'émettre et de recevoir des données simultanément, doublant la bande passante effective."
+  },
+  {
+    "q": "Proxy ?",
+    "o": [
+      "Intermédiaire",
+      "Virus",
+      "Câble",
+      "Mail"
+    ],
+    "a": "Intermédiaire",
+    "h": "Il agit au nom du client.",
+    "e": "Un serveur Proxy fait l'intermédiaire entre un client et Internet, souvent pour le cache ou le filtrage."
+  },
+  {
+    "q": "Distance max Ethernet ?",
+    "o": [
+      "100m",
+      "50m",
+      "500m",
+      "1km"
+    ],
+    "a": "100m",
+    "h": "Sur câble cuivre torsadé.",
+    "e": "La norme Ethernet sur cuivre (cat 5/6) impose une limite théorique de 100 mètres entre deux équipements actifs."
+  },
+  {
+    "q": "Connecteur téléphone ?",
+    "o": [
+      "RJ11",
+      "RJ45",
+      "USB",
+      "BNC"
+    ],
+    "a": "RJ11",
+    "h": "Plus petit que le RJ45.",
+    "e": "Le RJ11 est utilisé pour le téléphone analogique/ADSL (4 ou 6 broches), le RJ45 pour le réseau (8 broches)."
+  },
+  {
+    "q": "Latence ?",
+    "o": [
+      "Temps de réponse",
+      "Débit",
+      "Perte",
+      "Jitter"
+    ],
+    "a": "Temps de réponse",
+    "h": "Le temps d'aller-retour.",
+    "e": "La latence (ou Ping) est le délai nécessaire pour qu'un paquet traverse le réseau."
+  },
+  {
+    "q": "Connecteur réseau standard ?",
+    "o": [
+      "RJ45",
+      "RJ11",
+      "RS232",
+      "USB"
+    ],
+    "a": "RJ45",
+    "h": "Registered Jack 45.",
+    "e": "Le connecteur RJ45 (8P8C) est le standard mondial pour les réseaux Ethernet sur cuivre."
+  },
+  {
+    "q": "Catégorie câble pour 1Gbps ?",
+    "o": [
+      "Cat5e",
+      "Cat3",
+      "Cat4",
+      "Coaxial"
+    ],
+    "a": "Cat5e",
+    "h": "Le 'e' signifie Enhanced.",
+    "e": "Le Cat5e est le minimum requis pour supporter le Gigabit Ethernet (1000BASE-T) de manière fiable."
+  },
+  {
+    "q": "Débit max théorique Wi-Fi 4 (N) ?",
+    "o": [
+      "600 Mbps",
+      "54 Mbps",
+      "11 Mbps",
+      "10 Gbps"
+    ],
+    "a": "600 Mbps",
+    "h": "Norme 802.11n avec 4 antennes (MIMO).",
+    "e": "Le 802.11n peut atteindre 600 Mbps théoriques (en utilisant 4 flux spatiaux et des canaux de 40 MHz)."
+  },
+  {
+    "q": "Fréquence Wi-Fi standard ?",
+    "o": [
+      "2.4 GHz",
+      "50 Hz",
+      "100 MHz",
+      "4G"
+    ],
+    "a": "2.4 GHz",
+    "h": "La fréquence historique, qui traverse bien les murs.",
+    "e": "Le Wi-Fi utilise principalement les bandes 2.4 GHz (portée) et 5 GHz (vitesse)."
+  },
+  {
+    "q": "Canaux Wi-Fi 2.4GHz sans recouvrement ?",
+    "o": [
+      "1, 6, 11",
+      "1, 2, 3",
+      "1, 5, 10",
+      "2, 4, 8"
+    ],
+    "a": "1, 6, 11",
+    "h": "Il faut laisser 5 canaux d'écart.",
+    "e": "En 2.4 GHz, seuls les canaux 1, 6 et 11 ne se chevauchent pas (en 20MHz), évitant les interférences."
+  },
+  {
+    "q": "Qu'est-ce qu'un SFP ?",
+    "o": [
+      "Module optique/cuivre",
+      "Protocole",
+      "Câble",
+      "Switch"
+    ],
+    "a": "Module optique/cuivre",
+    "h": "Small Form-factor Pluggable.",
+    "e": "Un SFP est un petit module transceiver que l'on insère dans un switch pour connecter de la fibre optique ou du cuivre."
+  },
+  {
+    "q": "Différence Fibre Mono vs Multi ?",
+    "o": [
+      "Mono = Longue distance",
+      "Multi = Longue distance",
+      "Aucune",
+      "Mono est moins chère"
+    ],
+    "a": "Mono = Longue distance",
+    "h": "Monomode a un cœur très fin pour le laser.",
+    "e": "La fibre Monomode (Single Mode) permet de très longues distances (km) grâce à un laser. La Multimode (LED) est pour les courtes distances."
+  },
+  {
+    "q": "Que signifie 'STP' (Switching) ?",
+    "o": [
+      "Spanning Tree Protocol",
+      "Shielded Twisted Pair",
+      "Standard Transfer",
+      "Simple Text"
+    ],
+    "a": "Spanning Tree Protocol",
+    "h": "Protocole de l'arbre recouvrant.",
+    "e": "Ne pas confondre avec le câble (Shielded Twisted Pair). Ici c'est le protocole 802.1D."
+  },
+  {
+    "q": "À quoi sert le STP ?",
+    "o": [
+      "Éviter les boucles L2",
+      "Router",
+      "Sécuriser",
+      "Vitesse"
+    ],
+    "a": "Éviter les boucles L2",
+    "h": "Il désactive les liens redondants.",
+    "e": "Le Spanning Tree détecte les boucles physiques dans le réseau et bloque certains ports pour maintenir une topologie logique sans boucle."
+  },
+  {
+    "q": "Câble console Cisco ?",
+    "o": [
+      "Rollover (Bleu)",
+      "Croisé",
+      "Droit",
+      "Fibre"
+    ],
+    "a": "Rollover (Bleu)",
+    "h": "Il est plat et bleu clair.",
+    "e": "Le câble Rollover inverse complètement les broches (1 vers 8, 2 vers 7...) pour se connecter au port console série."
+  },
+  {
+    "q": "Norme PoE+ ?",
+    "o": [
+      "802.3at",
+      "802.3af",
+      "802.1Q",
+      "802.11"
+    ],
+    "a": "802.3at",
+    "h": "Le '+' indique plus de puissance.",
+    "e": "802.3af est le PoE standard (15.4W). 802.3at est le PoE+ (30W)."
+  },
+  {
+    "q": "Norme VLAN Tagging ?",
+    "o": [
+      "802.1Q",
+      "802.1D",
+      "802.11",
+      "802.3"
+    ],
+    "a": "802.1Q",
+    "h": "Dot1Q.",
+    "e": "Le standard 802.1Q ajoute un 'Tag' de 4 octets dans la trame Ethernet pour identifier le VLAN."
+  },
+  {
+    "q": "Distance Admin EIGRP ?",
+    "o": [
+      "90",
+      "110",
+      "120",
+      "1"
+    ],
+    "a": "90",
+    "h": "C'est le protocole le plus 'préféré' des IGP.",
+    "e": "EIGRP a une AD interne de 90, ce qui le rend prioritaire sur OSPF (110) et RIP (120)."
+  },
+  {
+    "q": "Qu'est-ce que le 'Jitter' ?",
+    "o": [
+      "Variation de la latence",
+      "Latence fixe",
+      "Perte paquet",
+      "Bande passante"
+    ],
+    "a": "Variation de la latence",
+    "h": "En français : Gigue.",
+    "e": "Le Jitter est la variation du délai d'arrivée des paquets. C'est très mauvais pour la VoIP."
+  },
+  {
+    "q": "Un 'Broadcast Storm' est causé par...",
+    "o": [
+      "Une boucle de commutation",
+      "Un routeur",
+      "Un virus",
+      "Un câble débranché"
+    ],
+    "a": "Une boucle de commutation",
+    "h": "Quand les switchs se renvoient les trames à l'infini.",
+    "e": "Sans STP, une boucle physique provoque une tempête de diffusion qui sature le réseau en quelques secondes."
+  },
+  {
+    "q": "Adresse de Multicast Ethernet commence par...",
+    "o": [
+      "01:00:5E",
+      "FF:FF:FF",
+      "00:00:0C",
+      "AA:BB:CC"
+    ],
+    "a": "01:00:5E",
+    "h": "C'est une valeur fixe standard.",
+    "e": "Pour mapper une IP Multicast en MAC, on utilise le préfixe OUI 01:00:5E."
+  },
+  {
+    "q": "Qu'est-ce qu'un AP ?",
+    "o": [
+      "Access Point",
+      "Access Protocol",
+      "Admin Port",
+      "Address Provider"
+    ],
+    "a": "Access Point",
+    "h": "Borne Wi-Fi.",
+    "e": "Un Point d'Accès permet aux clients Wi-Fi de se connecter au réseau filaire."
+  },
+  {
+    "q": "Que fait un Serveur Radius ?",
+    "o": [
+      "Authentification centralisée",
+      "Routage",
+      "DHCP",
+      "DNS"
+    ],
+    "a": "Authentification centralisée",
+    "h": "Il vérifie qui a le droit d'entrer.",
+    "e": "RADIUS gère l'AAA (Authentication, Authorization, Accounting) pour centraliser les accès réseau."
+  },
+  {
+    "q": "Qu'est-ce qu'une DMZ ?",
+    "o": [
+      "Zone démilitarisée",
+      "Zone militaire",
+      "Zone morte",
+      "Domaine Majeur"
+    ],
+    "a": "Zone démilitarisée",
+    "h": "Une zone tampon pour les serveurs publics.",
+    "e": "Une DMZ est un sous-réseau isolé qui expose des services (Web, Mail) à Internet tout en protégeant le réseau interne."
+  },
+  {
+    "q": "Quel est le débit du FastEthernet ?",
+    "o": [
+      "100 Mbps",
+      "10 Mbps",
+      "1 Gbps",
+      "10 Gbps"
+    ],
+    "a": "100 Mbps",
+    "h": "Fast signifiait 'rapide' dans les années 90.",
+    "e": "FastEthernet correspond à la norme 100BASE-T (100 Mégabits par seconde)."
+  },
+  {
+    "q": "Quel est le débit du GigabitEthernet ?",
+    "o": [
+      "1000 Mbps",
+      "100 Mbps",
+      "10 Gbps",
+      "10 Mbps"
+    ],
+    "a": "1000 Mbps",
+    "h": "Giga = Milliard.",
+    "e": "Gigabit Ethernet correspond à 1000 Mbps (1 Gbps)."
+  },
+  {
+    "q": "Qu'est-ce que le QoS ?",
+    "o": [
+      "Quality of Service",
+      "Quantity of Systems",
+      "Quick OS",
+      "Query of Status"
+    ],
+    "a": "Quality of Service",
+    "h": "Donner la priorité à la voix sur le téléchargement.",
+    "e": "La QoS permet de gérer la congestion en priorisant certains types de trafic critiques."
+  },
+  {
+    "q": "Métrique utilisée par RIP ?",
+    "o": [
+      "Sauts (Hops)",
+      "Bande passante",
+      "Délai",
+      "Coût"
+    ],
+    "a": "Sauts (Hops)",
+    "h": "Il choisit le chemin le plus court en nombre de routeurs.",
+    "e": "RIP ne prend pas en compte la vitesse des liens, seulement le nombre de routeurs à traverser (Max 15)."
+  },
+  {
+    "q": "Métrique utilisée par OSPF ?",
+    "o": [
+      "Coût (Bande passante)",
+      "Sauts",
+      "Charge",
+      "Délai"
+    ],
+    "a": "Coût (Bande passante)",
+    "h": "10^8 / Bande passante.",
+    "e": "OSPF calcule un coût basé sur la vitesse du lien. Un lien 10Gbps est préféré à un lien 10Mbps."
+  },
+  {
+    "q": "Un VPN permet de...",
+    "o": [
+      "Créer un tunnel sécurisé",
+      "Aller plus vite",
+      "Avoir la fibre",
+      "Héberger un site"
+    ],
+    "a": "Créer un tunnel sécurisé",
+    "h": "Virtual Private Network.",
+    "e": "Un VPN chiffre les données pour créer un tunnel privé virtuel à travers un réseau public comme Internet."
+  },
+  {
+    "q": "Qu'est-ce que l'ARP Spoofing ?",
+    "o": [
+      "Usurpation d'identité L2",
+      "Vol d'IP",
+      "Attaque Wifi",
+      "Virus"
+    ],
+    "a": "Usurpation d'identité L2",
+    "h": "Je fais croire que je suis le routeur.",
+    "e": "L'attaquant envoie de fausses réponses ARP pour associer son adresse MAC à l'IP de la passerelle (Man In The Middle)."
+  },
+  {
+    "q": "Un routeur 'On a stick' sert à...",
+    "o": [
+      "Router entre VLANs",
+      "Amplifier le signal",
+      "Bloquer le trafic",
+      "Rien"
+    ],
+    "a": "Router entre VLANs",
+    "h": "Une seule interface physique avec plein de sous-interfaces.",
+    "e": "C'est une configuration où un routeur utilise une seule liaison trunk (avec des sous-interfaces) pour router entre plusieurs VLANs."
+  },
+  {
+    "q": "L'adresse 1.1.1.1 est...",
+    "o": [
+      "DNS Cloudflare",
+      "Google",
+      "Réservé",
+      "Local"
+    ],
+    "a": "DNS Cloudflare",
+    "h": "Concurrent de 8.8.8.8.",
+    "e": "C'est le résolveur DNS public rapide et axé sur la confidentialité proposé par Cloudflare."
+  },
+  {
+    "q": "Qu'est-ce qu'un IDS ?",
+    "o": [
+      "Intrusion Detection System",
+      "Identity System",
+      "IP Data Service",
+      "Internet Domain Service"
+    ],
+    "a": "Intrusion Detection System",
+    "h": "Il regarde et alerte, mais ne bloque pas.",
+    "e": "Un IDS analyse le trafic pour détecter des signatures d'attaques et lever une alerte."
+  },
+  {
+    "q": "Qu'est-ce qu'un IPS ?",
+    "o": [
+      "Intrusion Prevention System",
+      "IP Service",
+      "Internet Provider",
+      "Identity Provider"
+    ],
+    "a": "Intrusion Prevention System",
+    "h": "Il détecte et bloque l'attaque.",
+    "e": "Un IPS est un IDS actif : il est placé en coupure sur le réseau et peut bloquer les paquets malveillants."
+  },
+  {
+    "q": "192 en binaire ?",
+    "o": [
+      "11000000",
+      "10100000",
+      "11100000",
+      "10000000"
+    ],
+    "a": "11000000",
+    "h": "128 + 64.",
+    "e": "192 est la somme des deux premiers bits de poids fort : 128 + 64."
+  },
+  {
+    "q": "10 en binaire ?",
+    "o": [
+      "00001010",
+      "00001100",
+      "00001011",
+      "00000101"
+    ],
+    "a": "00001010",
+    "h": "8 + 2.",
+    "e": "Dans l'octet : le bit 8 est à 1 et le bit 2 est à 1 (00001010)."
+  },
+  {
+    "q": "11111111 en décimal ?",
+    "o": [
+      "255",
+      "254",
+      "256",
+      "128"
+    ],
+    "a": "255",
+    "h": "Tous les bits sont à 1.",
+    "e": "C'est la valeur maximale d'un octet (2^8 - 1)."
+  },
+  {
+    "q": "IP dans un /29 ?",
+    "o": [
+      "8",
+      "6",
+      "14",
+      "4"
+    ],
+    "a": "8",
+    "h": "3 bits pour les hôtes.",
+    "e": "2 puissance 3 = 8 adresses totales."
+  },
+  {
+    "q": "Hôtes dans un /29 ?",
+    "o": [
+      "6",
+      "8",
+      "4",
+      "2"
+    ],
+    "a": "6",
+    "h": "Total moins réseau et broadcast.",
+    "e": "8 adresses totales - 2 réservées = 6 hôtes utilisables."
+  },
+  {
+    "q": "Masque pour 240.0.0.0 ?",
+    "o": [
+      "/4",
+      "/8",
+      "/12",
+      "/20"
+    ],
+    "a": "/4",
+    "h": "240 = 11110000.",
+    "e": "Les 4 premiers bits sont à 1."
+  },
+  {
+    "q": "Bit le plus à gauche ?",
+    "o": [
+      "128",
+      "1",
+      "256",
+      "64"
+    ],
+    "a": "128",
+    "h": "MSB (Most Significant Bit).",
+    "e": "Dans un octet, le premier bit a la valeur 128 (2^7)."
+  },
+  {
+    "q": "Bit le plus à droite ?",
+    "o": [
+      "1",
+      "0",
+      "2",
+      "8"
+    ],
+    "a": "1",
+    "h": "LSB (Least Significant Bit).",
+    "e": "Dans un octet, le dernier bit a la valeur 1 (2^0)."
+  },
+  {
+    "q": "Classe C ?",
+    "o": [
+      "192-223",
+      "128-191",
+      "1-126",
+      "224"
+    ],
+    "a": "192-223",
+    "h": "Les 3 premiers bits sont 110.",
+    "e": "La classe C commence à 192 (11000000) et finit à 223."
+  },
+  {
+    "q": "Classe B ?",
+    "o": [
+      "128-191",
+      "1-126",
+      "192-223",
+      "224"
+    ],
+    "a": "128-191",
+    "h": "Les 2 premiers bits sont 10.",
+    "e": "La classe B commence à 128 (10000000) et finit à 191."
+  },
+  {
+    "q": "255.255.255.255 ?",
+    "o": [
+      "Broadcast Global",
+      "Local",
+      "Multicast",
+      "Réseau"
+    ],
+    "a": "Broadcast Global",
+    "h": "Limited Broadcast.",
+    "e": "C'est l'adresse pour crier à tout le monde sur le réseau local, sans passer les routeurs."
+  },
+  {
+    "q": "/32 ?",
+    "o": [
+      "1 IP",
+      "Réseau",
+      "Internet",
+      "Rien"
+    ],
+    "a": "1 IP",
+    "h": "Tous les bits sont figés.",
+    "e": "Un masque /32 désigne une adresse unique (Host Route)."
+  },
+  {
+    "q": "Vider DNS ?",
+    "o": [
+      "flushdns",
+      "renew",
+      "release",
+      "clear"
+    ],
+    "a": "flushdns",
+    "h": "ipconfig /...",
+    "e": "La commande est 'ipconfig /flushdns' sous Windows."
+  },
+  {
+    "q": "Port 443 ?",
+    "o": [
+      "HTTPS",
+      "HTTP",
+      "SSH",
+      "FTP"
+    ],
+    "a": "HTTPS",
+    "h": "Sécurisé.",
+    "e": "Standard du Web chiffré."
+  },
+  {
+    "q": "Octets IPv4 ?",
+    "o": [
+      "4",
+      "32",
+      "8",
+      "16"
+    ],
+    "a": "4",
+    "h": "4 groupes de nombres.",
+    "e": "32 bits divisés par 8 bits = 4 octets."
+  },
+  {
+    "q": "128 en binaire ?",
+    "o": [
+      "10000000",
+      "01000000",
+      "00000001",
+      "11000000"
+    ],
+    "a": "10000000",
+    "h": "Juste le premier bit.",
+    "e": "C'est la valeur du bit de poids fort."
+  },
+  {
+    "q": "Broadcast de 192.168.1.0/24 ?",
+    "o": [
+      "192.168.1.255",
+      "192.168.1.0",
+      "192.168.1.254",
+      "192.168.0.255"
+    ],
+    "a": "192.168.1.255",
+    "h": "Tous les bits hôtes à 1.",
+    "e": "Le dernier octet est entièrement à 1, donc 255."
+  },
+  {
+    "q": "Sous-réseaux /27 dans /24 ?",
+    "o": [
+      "8",
+      "4",
+      "2",
+      "16"
+    ],
+    "a": "8",
+    "h": "On passe de 24 à 27 bits (3 bits empruntés).",
+    "e": "2 puissance 3 bits empruntés = 8 sous-réseaux."
+  },
+  {
+    "q": "Hexa F ?",
+    "o": [
+      "15",
+      "16",
+      "10",
+      "14"
+    ],
+    "a": "15",
+    "h": "C'est le dernier chiffre hexa.",
+    "e": "0-9 puis A, B, C, D, E, F. F vaut 15."
+  },
+  {
+    "q": "MAC FF:FF... ?",
+    "o": [
+      "Broadcast L2",
+      "Unicast",
+      "Multicast",
+      "Loop"
+    ],
+    "a": "Broadcast L2",
+    "h": "Tous les bits à 1 au niveau Ethernet.",
+    "e": "C'est l'adresse de diffusion Ethernet. La trame est traitée par toutes les cartes réseau."
+  },
+  {
+    "q": "11110000 en décimal ?",
+    "o": [
+      "240",
+      "224",
+      "192",
+      "248"
+    ],
+    "a": "240",
+    "h": "128 + 64 + 32 + 16.",
+    "e": "La somme des 4 premiers bits donne 240."
+  },
+  {
+    "q": "Emprunt 2 bits = ?",
+    "o": [
+      "4 sous-réseaux",
+      "2",
+      "8",
+      "6"
+    ],
+    "a": "4 sous-réseaux",
+    "h": "2 puissance 2.",
+    "e": "2^2 = 4 combinaisons possibles."
+  },
+  {
+    "q": "Pas de /26 ?",
+    "o": [
+      "64",
+      "128",
+      "32",
+      "16"
+    ],
+    "a": "64",
+    "h": "Le dernier bit du masque est 192 (11000000).",
+    "e": "Le bit le plus à droite du masque a la valeur 64. C'est la taille magique (le pas)."
+  },
+  {
+    "q": "IP dans /28 ?",
+    "o": [
+      "16",
+      "14",
+      "32",
+      "8"
+    ],
+    "a": "16",
+    "h": "4 bits restants pour les hôtes.",
+    "e": "2^4 = 16 adresses totales."
+  },
+  {
+    "q": "Hôtes dans /28 ?",
+    "o": [
+      "14",
+      "16",
+      "12",
+      "30"
+    ],
+    "a": "14",
+    "h": "16 moins les 2 réservées.",
+    "e": "16 - 2 = 14 hôtes utilisables."
+  },
+  {
+    "q": "1 AND 0 ?",
+    "o": [
+      "0",
+      "1",
+      "2",
+      "10"
+    ],
+    "a": "0",
+    "h": "Logique ET.",
+    "e": "Il faut que les deux soient à 1 pour faire 1."
+  },
+  {
+    "q": "1 AND 1 ?",
+    "o": [
+      "1",
+      "0",
+      "2",
+      "11"
+    ],
+    "a": "1",
+    "h": "Logique ET.",
+    "e": "Vrai et Vrai donne Vrai."
+  },
+  {
+    "q": "10101010 ?",
+    "o": [
+      "170",
+      "85",
+      "192",
+      "160"
+    ],
+    "a": "170",
+    "h": "128 + 32 + 8 + 2.",
+    "e": "En additionnant les positions à 1, on obtient 170."
+  },
+  {
+    "q": "Bits dans octet ?",
+    "o": [
+      "8",
+      "4",
+      "16",
+      "32"
+    ],
+    "a": "8",
+    "h": "C'est la base.",
+    "e": "Un octet (Byte) est toujours composé de 8 bits."
+  },
+  {
+    "q": "Broadcast 10.0.0.0/8 ?",
+    "o": [
+      "10.255.255.255",
+      "10.0.0.255",
+      "10.255.0.0",
+      "10.0.255.255"
+    ],
+    "a": "10.255.255.255",
+    "h": "Les 3 derniers octets sont la partie hôte.",
+    "e": "On met toute la partie hôte à 1 : 10.255.255.255."
+  },
+  {
+    "q": "Combien d'adresses MAC distinctes (théorie) ?",
+    "o": [
+      "2^48",
+      "2^32",
+      "2^64",
+      "2^24"
+    ],
+    "a": "2^48",
+    "h": "48 bits de possibilités.",
+    "e": "Cela représente environ 281 000 milliards d'adresses."
+  },
+  {
+    "q": "2^10 vaut ?",
+    "o": [
+      "1024",
+      "512",
+      "2048",
+      "1000"
+    ],
+    "a": "1024",
+    "h": "C'est le 'Kilo' informatique.",
+    "e": "1024 est une valeur clé en informatique (1 Kio)."
+  },
+  {
+    "q": "Hexa A vaut ?",
+    "o": [
+      "10",
+      "11",
+      "12",
+      "13"
+    ],
+    "a": "10",
+    "h": "C'est le premier chiffre après 9.",
+    "e": "A=10, B=11, C=12, etc."
+  },
+  {
+    "q": "Hexa C vaut ?",
+    "o": [
+      "12",
+      "10",
+      "11",
+      "13"
+    ],
+    "a": "12",
+    "h": "A=10, B=11...",
+    "e": "C correspond à la valeur décimale 12."
+  },
+  {
+    "q": "00000111 en décimal ?",
+    "o": [
+      "7",
+      "3",
+      "8",
+      "15"
+    ],
+    "a": "7",
+    "h": "4 + 2 + 1.",
+    "e": "Les 3 derniers bits sont à 1."
+  },
+  {
+    "q": "192 en hexadécimal ?",
+    "o": [
+      "C0",
+      "A0",
+      "F0",
+      "C1"
+    ],
+    "a": "C0",
+    "h": "192 = 12 x 16.",
+    "e": "192 divisé par 16 = 12 (C). Reste 0. Donc C0."
+  },
+  {
+    "q": "255 en hexadécimal ?",
+    "o": [
+      "FF",
+      "EE",
+      "FE",
+      "00"
+    ],
+    "a": "FF",
+    "h": "C'est le maximum.",
+    "e": "F (15) est le max sur 4 bits. FF est le max sur 8 bits."
+  },
+  {
+    "q": "Quel est le résultat de 1 OR 0 ?",
+    "o": [
+      "1",
+      "0",
+      "2",
+      "10"
+    ],
+    "a": "1",
+    "h": "Logique OU.",
+    "e": "Il suffit qu'un des deux soit à 1 pour que le résultat soit 1."
+  },
+  {
+    "q": "Si j'ai 5 bits hôtes, combien d'hôtes ?",
+    "o": [
+      "30",
+      "32",
+      "62",
+      "16"
+    ],
+    "a": "30",
+    "h": "2^5 - 2.",
+    "e": "32 adresses au total, moins réseau et broadcast = 30."
+  },
+  {
+    "q": "Nombre de sous-réseaux si j'emprunte 4 bits ?",
+    "o": [
+      "16",
+      "8",
+      "32",
+      "4"
+    ],
+    "a": "16",
+    "h": "2 puissance 4.",
+    "e": "2^4 = 16 sous-réseaux créés."
+  },
+  {
+    "q": "Convertir 10000001 en décimal ?",
+    "o": [
+      "129",
+      "128",
+      "192",
+      "161"
+    ],
+    "a": "129",
+    "h": "128 + 1.",
+    "e": "Le premier bit (128) et le dernier bit (1) sont activés."
+  },
+  {
+    "q": "Quel CIDR pour 4000 hôtes ?",
+    "o": [
+      "/20",
+      "/19",
+      "/21",
+      "/18"
+    ],
+    "a": "/20",
+    "h": "Il faut chercher la puissance de 2 supérieure à 4000.",
+    "e": "2^12 = 4096. Il faut 12 bits hôtes. 32 - 12 = /20."
+  },
+  {
+    "q": "Quel CIDR pour 500 hôtes ?",
+    "o": [
+      "/23",
+      "/24",
+      "/22",
+      "/25"
+    ],
+    "a": "/23",
+    "h": "Un /24 fait 256 (trop petit). Il faut le double.",
+    "e": "2^9 = 512. Il faut 9 bits hôtes. 32 - 9 = /23."
+  },
+  {
+    "q": "Valeur de 2^0 ?",
+    "o": [
+      "1",
+      "0",
+      "2",
+      "Undefined"
+    ],
+    "a": "1",
+    "h": "Tout nombre puissance 0 vaut 1.",
+    "e": "C'est la valeur du bit le plus à droite (LSB)."
+  },
+  {
+    "q": "Valeur de 2^1 ?",
+    "o": [
+      "2",
+      "1",
+      "0",
+      "4"
+    ],
+    "a": "2",
+    "h": "2 une seule fois.",
+    "e": "C'est la base du binaire."
+  },
+  {
+    "q": "Combien d'octets dans un mot de 32 bits ?",
+    "o": [
+      "4",
+      "2",
+      "8",
+      "1"
+    ],
+    "a": "4",
+    "h": "32 divisé par 8.",
+    "e": "Un mot de 32 bits correspond à 4 octets."
+  },
+  {
+    "q": "IPv6 a combien de groupes hexadécimaux ?",
+    "o": [
+      "8",
+      "4",
+      "16",
+      "6"
+    ],
+    "a": "8",
+    "h": "Séparés par des deux-points.",
+    "e": "Une adresse IPv6 est composée de 8 groupes de 16 bits (hextets)."
+  },
+  {
+    "q": "Masque 255.255.255.128 : Broadcast réseau 192.168.1.0 ?",
+    "o": [
+      "192.168.1.127",
+      "192.168.1.255",
+      "192.168.1.128",
+      "192.168.1.0"
+    ],
+    "a": "192.168.1.127",
+    "h": "Le réseau va de 0 à 127.",
+    "e": "La taille du bloc est 128. 0 + 128 - 1 = 127."
+  },
+  {
+    "q": "Si IP = 10.10.10.10/32, ID Réseau ?",
+    "o": [
+      "10.10.10.10",
+      "10.10.10.0",
+      "10.0.0.0",
+      "10.10.0.0"
+    ],
+    "a": "10.10.10.10",
+    "h": "Le masque /32 ne laisse aucun bit à 0 pour l'hôte.",
+    "e": "En /32, l'ID réseau est identique à l'adresse IP."
+  },
+  {
+    "q": "0x10 en décimal ?",
+    "o": [
+      "16",
+      "10",
+      "20",
+      "1"
+    ],
+    "a": "16",
+    "h": "C'est 1 paquet de 16 et 0 unité.",
+    "e": "En base 16, le '1' en deuxième position vaut 16."
+  },
+  {
+    "q": "Binaire de 3 ?",
+    "o": [
+      "00000011",
+      "00000001",
+      "00000111",
+      "00000010"
+    ],
+    "a": "00000011",
+    "h": "2 + 1.",
+    "e": "Il faut activer les bits 1 et 2."
+  },
+  {
+    "q": "Binaire de 127 ?",
+    "o": [
+      "01111111",
+      "10000000",
+      "11111111",
+      "00111111"
+    ],
+    "a": "01111111",
+    "h": "128 - 1.",
+    "e": "C'est 128 moins 1, donc tous les bits sauf le 128 sont à 1."
+  },
+  {
+    "q": "Combien de bits pour faire 100 sous-réseaux ?",
+    "o": [
+      "7",
+      "6",
+      "5",
+      "8"
+    ],
+    "a": "7",
+    "h": "2^6=64 (pas assez). 2^7=128.",
+    "e": "Il faut trouver la puissance de 2 supérieure à 100. 2^7 = 128."
+  },
+  {
+    "q": "Masque /24 : combien de 1 ?",
+    "o": [
+      "24",
+      "8",
+      "16",
+      "32"
+    ],
+    "a": "24",
+    "h": "La réponse est dans la question.",
+    "e": "Le chiffre du CIDR indique littéralement le nombre de bits à 1."
+  },
+  {
+    "q": "Masque /24 : combien de 0 ?",
+    "o": [
+      "8",
+      "24",
+      "16",
+      "0"
+    ],
+    "a": "8",
+    "h": "32 total - 24 réseau.",
+    "e": "Il reste 8 bits pour la partie hôte."
+  },
+  {
+    "q": "Dans 172.16.0.0/12, le 2ème octet va de...",
+    "o": [
+      "16 à 31",
+      "0 à 255",
+      "16 à 16",
+      "0 à 15"
+    ],
+    "a": "16 à 31",
+    "h": "Le masque /12 fige les 4 premiers bits du 2ème octet.",
+    "e": "Le 2ème octet commence à 16. La taille de bloc du /12 est 16 (dans le 2ème octet). 16 + 16 - 1 = 31."
+  },
+  {
+    "q": "Combien d'IP total en IPv4 ?",
+    "o": [
+      "~4 milliards",
+      "~2 milliards",
+      "~6 milliards",
+      "Infini"
+    ],
+    "a": "~4 milliards",
+    "h": "2 puissance 32.",
+    "e": "4 294 967 296 adresses uniques possibles."
+  },
+  {
+    "q": "Wildcard de /24 ?",
+    "o": [
+      "0.0.0.255",
+      "255.255.255.0",
+      "0.0.255.255",
+      "0.0.0.0"
+    ],
+    "a": "0.0.0.255",
+    "h": "Inverse de 255.255.255.0.",
+    "e": "Le masque Wildcard est l'inverse binaire du masque de sous-réseau."
+  },
+  {
+    "q": "Wildcard de /16 ?",
+    "o": [
+      "0.0.255.255",
+      "0.255.255.255",
+      "0.0.0.255",
+      "0.0.0.0"
+    ],
+    "a": "0.0.255.255",
+    "h": "Inverse de 255.255.0.0.",
+    "e": "Les deux derniers octets sont libres (wild), donc 255.255."
+  },
+  {
+    "q": "Combien de zéros dans le binaire de 255 ?",
+    "o": [
+      "0",
+      "8",
+      "1",
+      "4"
+    ],
+    "a": "0",
+    "h": "255, c'est l'octet plein.",
+    "e": "255 s'écrit 11111111. Il n'y a aucun zéro."
+  }
+]
