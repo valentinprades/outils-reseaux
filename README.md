@@ -11,7 +11,7 @@ L'objectif central est de transformer une théorie parfois abstraite en compéte
 * **Autonomie totale :** Idéal pour les révisions personnelles en amont des travaux pratiques (TP) ou des examens.
 
 ## 🛠️ Ce que propose l'outil
-* **Générateur de scénarios VLSM :** Crée des énoncés d'architecture réseau d'entreprise fictive avec des contraintes réalistes (services DHCP, DNS, ACL, routage dynamique OSPF/RIPv2).
+* **Générateur de scénarios VLSM :** Crée des énoncés d'architecture réseau d'entreprise fictive avec des contraintes réalistes (services DHCP, DNS).
 * **Entraînement au routage statique :** Génère des tables de routage à analyser pour apprendre à visualiser mentalement la topologie d'un réseau.
 * **Atelier de Subnetting (FLSM/VLSM) :** Un exerciseur pour s'entraîner à découper les réseaux sans gaspillage d'adresses.
 * **Quiz interactif :** Plus de 300 questions de révision couvrant le modèle OSI, les protocoles majeurs et le matériel.
