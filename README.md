@@ -2,6 +2,8 @@
 
 > **Un compagnon d'apprentissage interactif pour maîtriser les fondamentaux du réseau informatique.**
 
+🔗 **Lien de l'application :** [https://outils-reseaux.netlify.app/](https://outils-reseaux.netlify.app/)
+
 Ce projet est né d'un constat simple : l'apprentissage du réseau (calculs de masques, VLSM, routage) demande une pratique intensive que les fiches d'exercices statiques ont du mal à offrir. Cet outil a été conçu de manière altruiste pour offrir aux étudiants et futurs techniciens un espace d'entraînement dynamique et autonome.
 
 ## 🎓 Intention Pédagogique & Accompagnement
@@ -11,9 +13,9 @@ L'objectif central est de transformer une théorie parfois abstraite en compéte
 * **Autonomie totale :** Idéal pour les révisions personnelles en amont des travaux pratiques (TP) ou des examens.
 
 ## 🛠️ Ce que propose l'outil
-* **Générateur de scénarios VLSM :** Crée des énoncés d'architecture réseau d'entreprise fictive avec des contraintes réalistes (services DHCP, DNS).
+* **Générateur de scénarios VLSM :** Crée des énoncés d'architecture réseau d'entreprise fictive avec des contraintes réalistes (services DHCP, DNS, ACL, routage dynamique OSPF/RIPv2).
 * **Entraînement au routage statique :** Génère des tables de routage à analyser pour apprendre à visualiser mentalement la topologie d'un réseau.
-* **Atelier de Subnetting (FLSM/VLSM) :** Un exerciseur pour s'entraîner à découper les réseaux sans gaspillage d'adresses.
+* **Atelier de Subnetting (FLSM/VLSM) :** Un exerciseur pour s'entraîner à découper les réseaux sans gaspillage d'adresses IP.
 * **Quiz interactif :** Plus de 300 questions de révision couvrant le modèle OSI, les protocoles majeurs et le matériel.
 
 ## ⚙️ Note sur la conception
