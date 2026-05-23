@@ -1,22 +1,34 @@
         document.addEventListener('DOMContentLoaded', () => {
             
             // --- GESTION DU DARK MODE ---
-            const themeToggle = document.getElementById('theme-toggle');
+            const themeToggleBtn = document.getElementById('theme-toggle-btn');
+            const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+            const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
             const body = document.body;
+            
+            function updateThemeIcons() {
+                if (body.classList.contains('dark-mode')) {
+                    if (themeToggleLightIcon) themeToggleLightIcon.style.display = 'block';
+                    if (themeToggleDarkIcon) themeToggleDarkIcon.style.display = 'none';
+                } else {
+                    if (themeToggleDarkIcon) themeToggleDarkIcon.style.display = 'block';
+                    if (themeToggleLightIcon) themeToggleLightIcon.style.display = 'none';
+                }
+            }
+
             const currentTheme = localStorage.getItem('theme');
             if (currentTheme === 'dark') {
                 body.classList.add('dark-mode');
-                themeToggle.checked = true;
             }
-            themeToggle.addEventListener('change', () => {
-                if (themeToggle.checked) {
-                    body.classList.add('dark-mode');
-                    localStorage.setItem('theme', 'dark');
-                } else {
-                    body.classList.remove('dark-mode');
-                    localStorage.setItem('theme', 'light');
-                }
-            });
+            updateThemeIcons();
+
+            if (themeToggleBtn) {
+                themeToggleBtn.addEventListener('click', () => {
+                    body.classList.toggle('dark-mode');
+                    localStorage.setItem('theme', body.classList.contains('dark-mode') ? 'dark' : 'light');
+                    updateThemeIcons();
+                });
+            }
 
             // --- GESTION DES ONGLETS AVEC HISTORIQUE (BACK BUTTON) ---
             const tabButtons = document.querySelectorAll('.tab-button');
@@ -78,6 +90,24 @@
                 }
             });
 
+            // --- GESTION DES BOUTONS D'AJOUT DE RÉSEAUX (DYNAMIQUES) ---
+            document.querySelectorAll('.btn-add-host').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const targetId = btn.getAttribute('data-target');
+                    const listContainer = document.getElementById(targetId);
+                    if (!listContainer) return;
+                    
+                    const rowCount = listContainer.querySelectorAll('.host-req-row').length;
+                    // Calcul de la prochaine lettre (A=65). Si plus de 26, on recommence à A1, B1, etc.
+                    const nextLetter = String.fromCharCode(65 + (rowCount % 26)); 
+                    const nameBase = rowCount >= 26 ? `Réseau ${nextLetter}${Math.floor(rowCount/26)}` : `Réseau ${nextLetter}`;
+                    
+                    const row = document.createElement('div');
+                    row.className = 'host-req-row';
+                    row.innerHTML = `<input type="text" class="host-req-name" value="${nameBase}" placeholder="Nom"><input type="number" class="host-req-count" min="1" placeholder="Hôtes">`;
+                    listContainer.appendChild(row);
+                });
+            });
 
             
             // --- CŒUR : FONCTIONS DE CALCUL IP ---
@@ -436,7 +466,6 @@
             if (infoMaskInput) infoMaskInput.addEventListener('keyup', (e) => e.key === 'Enter' && calculateNetworkInfo());
 
             const vlsmToolInputNetwork = document.getElementById('vlsmToolInputNetwork');
-            const vlsmToolInputHosts = document.getElementById('vlsmToolInputHosts');
             const vlsmToolCalcButton = document.getElementById('vlsmToolCalcButton');
             const vlsmToolResult = document.getElementById('vlsmToolResult');
             function parseVLSMInput(text) { 
@@ -453,22 +482,40 @@
                     .filter(item => item !== null)
                     .sort((a, b) => b.hosts - a.hosts);
             }
+
+            function parseHostInputsForm(containerId) {
+                const container = document.getElementById(containerId);
+                if (!container) return [];
+                const rows = container.querySelectorAll('.host-req-row');
+                const requirements = [];
+                rows.forEach(row => {
+                    const name = row.querySelector('.host-req-name').value.trim();
+                    const hostsVal = row.querySelector('.host-req-count').value;
+                    const hosts = parseInt(hostsVal, 10);
+                    if (name && !isNaN(hosts) && hosts > 0) {
+                        requirements.push({ name, hosts });
+                    }
+                });
+                return requirements.sort((a, b) => b.hosts - a.hosts);
+            }
+
             function calculateManualVLSM() { 
                 const networkStr = vlsmToolInputNetwork.value;
-                const hostsStr = vlsmToolInputHosts.value;
                 vlsmToolResult.classList.remove('error');
                 const networkParts = networkStr.split('/');
                 if (networkParts.length !== 2) {
                     vlsmToolResult.innerHTML = '<span class="error">Erreur : Le réseau de base doit être au format IP/CIDR.</span>';
                     vlsmToolResult.classList.add('error'); vlsmToolResult.style.display = 'block'; return;
                 }
-                const baseIp = networkParts[0];
                 const baseCidr = parseInt(networkParts[1], 10);
-                const subnets = parseVLSMInput(hostsStr);
-                if (ipToLong(baseIp) === null || isNaN(baseCidr) || subnets.length === 0) {
+                const subnets = parseHostInputsForm('vlsmToolInputHostsContainer');
+                const inputIpLong = ipToLong(networkParts[0]);
+                if (inputIpLong === null || isNaN(baseCidr) || subnets.length === 0) {
                     vlsmToolResult.innerHTML = '<span class="error">Erreur : Réseau de base ou liste d\'hôtes invalide.</span>';
                     vlsmToolResult.classList.add('error'); vlsmToolResult.style.display = 'block'; return;
                 }
+                const maskLong = ipToLong(cidrToMask(baseCidr));
+                const baseIp = longToIp((inputIpLong & maskLong) >>> 0);
                 const solutionData = calculateVLSM(baseIp, baseCidr, subnets);
                 vlsmToolResult.innerHTML = generateSolutionTable(solutionData, 'première'); 
                 vlsmToolResult.style.display = 'block';
@@ -673,37 +720,36 @@
                     const type = target.dataset.type;
                     if (!itemId || !type) return;
 
-                    let listSource; let displayFunction; let targetTab; let currentItemRef; 
+                    let listSource; let displayFunction; let targetTab;
 
-                    if (type === 'scenario') { listSource = scenarioFavorites; displayFunction = displayScenario; targetTab = 'generator'; currentItemRef = 'currentScenario'; } 
-                    else if (type === 'routing') { listSource = routingFavorites; displayFunction = displayRoutingExercise; targetTab = 'routing'; currentItemRef = 'currentRoutingExercise'; } 
-                    else if (type === 'segmentation') { listSource = segmentationFavorites; displayFunction = displaySegmentationExercise; targetTab = 'segmentation'; currentItemRef = 'currentSegmentationExercise'; } 
+                    if (type === 'scenario') { listSource = scenarioFavorites; displayFunction = displayScenario; targetTab = 'generator'; } 
+                    else if (type === 'routing') { listSource = routingFavorites; displayFunction = displayRoutingExercise; targetTab = 'routing'; } 
+                    else if (type === 'segmentation') { listSource = segmentationFavorites; displayFunction = displaySegmentationExercise; targetTab = 'segmentation'; } 
                     else { return; }
                     
                     if (target.classList.contains('btn-load-fav')) {
                         const itemToLoad = JSON.parse(JSON.stringify(listSource.find(fav => fav.id === itemId))); 
                         if (itemToLoad) {
-                             window.loadingFavorite = true; 
-                             window[currentItemRef] = itemToLoad; 
-                             window.loadingFavorite = false;
-
                             if (type === 'scenario') {
+                                currentScenario = itemToLoad;
                                 currentDifficulty = itemToLoad.difficulty; currentGatewayRule = itemToLoad.gatewayRule;
                                 currentSolutionData = calculateVLSM(itemToLoad.baseNetwork.address, itemToLoad.baseNetwork.cidr, itemToLoad.subnets);
                                 currentClassicSolutionData = (currentDifficulty === 'Facile') ? calculateClassicSubnetting(itemToLoad.baseNetwork.address, itemToLoad.baseNetwork.cidr, itemToLoad.subnets) : null;
                                 displayFunction(itemToLoad, false); 
-                            } else {
+                            } else if (type === 'routing') {
+                                currentRoutingExercise = itemToLoad;
                                 displayFunction(itemToLoad); 
-                                if (type === 'segmentation') {
+                            } else if (type === 'segmentation') {
+                                     currentSegmentationExercise = itemToLoad;
                                      if(itemToLoad.subType === 'network') {
                                          currentSegmentationSolution = calculateSegmentationByNetworkSolution(itemToLoad.baseIp, itemToLoad.baseCidr, itemToLoad.N);
                                      } else {
                                          currentSegmentationSolution = calculateVLSM(itemToLoad.baseIp, itemToLoad.baseCidr, itemToLoad.requirements);
                                      }
+                                     displayFunction(itemToLoad);
                                      segmentationSolutionContainerEl.style.display = 'none'; segmentationSolutionContainerEl.innerHTML = '';
                                      btnShowSegmentationSolution.style.display = 'inline-block'; 
                                      btnCheckSegmentationSolution.style.display = 'inline-block';
-                                }
                             }
                             
                             document.querySelector(`.tab-button[data-tab="${targetTab}"]`).click();
@@ -762,8 +808,8 @@
 
             function displaySolution() { 
                  if (!currentSolutionData) return;
-                let solutionHTML = '';
-                if (currentDifficulty === 'Facile' && currentClassicSolutionData) {
+            let solutionHTML = '';
+                if (currentDifficulty === 'Facile' && currentClassicSolutionData && currentClassicSolutionData.solution.length > 0) {
                     solutionHTML += `<h3>Solution Classique (Sans VLSM)</h3><p>Un seul masque (/${currentClassicSolutionData.solution[0].cidr.substring(1)}) appliqué.</p>`;
                     solutionHTML += generateSolutionTable(currentClassicSolutionData, currentGatewayRule);
                     solutionHTML += `<h3 style="margin-top: 25px;">Solution Optimisée (Avec VLSM)</h3><p>Un masque adapté à chaque besoin.</p>`;
@@ -777,7 +823,6 @@
                 solutionContainer.innerHTML = solutionHTML;
                 solutionContainer.style.display = 'block';
                 
-                document.getElementById('btnGenerateIOS')?.addEventListener('click', showIOSConfigModal);
                 const btnGenIOS = document.getElementById('btnGenerateIOS');
                 if (btnGenIOS) btnGenIOS.onclick = showIOSConfigModal;
             }
@@ -840,9 +885,13 @@
             }
             
             function generateCustomScenario() { 
-                 const networkStr = document.getElementById('customBaseNetwork').value; const hostsStr = document.getElementById('customHosts').value; const networkParts = networkStr.split('/');
+                 const networkStr = document.getElementById('customBaseNetwork').value; const networkParts = networkStr.split('/');
                  if (networkParts.length !== 2 || ipToLong(networkParts[0]) === null || parseMask(`/${networkParts[1]}`) === null) { alert("Erreur : Réseau de base invalide."); return; }
-                 const baseNetwork = { address: networkParts[0], cidr: parseInt(networkParts[1], 10) }; const subnets = parseVLSMInput(hostsStr); if (subnets.length === 0) { alert("Erreur : Besoins invalides."); return; }
+                 const inputIpLong = ipToLong(networkParts[0]);
+                 const cidr = parseInt(networkParts[1], 10);
+                 const maskLong = ipToLong(cidrToMask(cidr));
+                 const baseIp = longToIp((inputIpLong & maskLong) >>> 0);
+                 const baseNetwork = { address: baseIp, cidr: cidr }; const subnets = parseHostInputsForm('customScenarioHostsContainer'); if (subnets.length === 0) { alert("Erreur : Veuillez remplir au moins un besoin en hôte."); return; }
                  currentGatewayRule = getRandom(['première', 'dernière']); let constraints = [`Passerelle = ${currentGatewayRule === 'première' ? '**première**' : '**dernière**'} IP.`, "**VLSM** requis."]; let services = [];
                  const useRIP = document.getElementById('customRoutingRIP').checked; const useOSPF = document.getElementById('customRoutingOSPF').checked; if (useRIP) constraints.push("Routage **RIPv2**."); if (useOSPF) constraints.push("Routage **OSPF**."); if (!useRIP && !useOSPF) constraints.push("Routage **statique**."); if (document.getElementById('customACL').checked && subnets.length >= 2) constraints.push(`**ACL** interdisant ${subnets[subnets.length - 1].name} -> ${subnets[0].name}.`);
                  if (document.getElementById('customDHCP').checked) services.push(`**DHCP** for ${subnets[0].name}.`); if (document.getElementById('customDNS').checked) services.push("**DNS**."); if (document.getElementById('customWEB').checked) services.push("**WEB** (HTTP).");
@@ -859,14 +908,22 @@
 
             function displayScenario(scenarioData, recalcSolutions = true) { 
                  solutionContainer.style.display = 'none'; solutionContainer.innerHTML = ''; currentScenario = scenarioData; currentDifficulty = scenarioData.difficulty; currentGatewayRule = scenarioData.gatewayRule;
+                 localStorage.setItem('activeScenario', JSON.stringify(scenarioData));
                  if (recalcSolutions) { currentSolutionData = calculateVLSM(scenarioData.baseNetwork.address, scenarioData.baseNetwork.cidr, scenarioData.subnets); currentClassicSolutionData = (scenarioData.difficulty === 'Facile') ? calculateClassicSubnetting(scenarioData.baseNetwork.address, scenarioData.baseNetwork.cidr, scenarioData.subnets) : null; }
                  const isFav = isFavorite(currentScenario, 'scenario'); const starIcon = isFav ? '★' : '☆'; const starClass = isFav ? 'is-favorite' : '';
                  let html = `<div class="scenario-title"><h2>${scenarioData.title}</h2><span id="saveFavoriteBtn" class="favorite-star ${starClass}" title="Ajouter/Retirer des favoris">${starIcon}</span></div>`;
+                 
+                 html += `<div class="scenario-columns">`;
+                 html += `<div class="scenario-col">`;
                  html += `<h3>1. Contexte</h3><p>Bloc d'adresse : <strong>${scenarioData.baseNetwork.address}/${scenarioData.baseNetwork.cidr}</strong>.</p><h3>2. Besoins</h3><ul>`;
-                 scenarioData.subnets.forEach(s => { html += `<li><strong>${s.name} :</strong> ${s.hosts} hôtes</li>`; }); html += `</ul><h3>3. Contraintes</h3><ul>`;
-                 scenarioData.constraints.forEach(c => { html += `<li>${c}</li>`; }); html += `</ul><h3>4. Services</h3><ul>`;
-                 scenarioData.services.forEach(s => { html += `<li>${s}</li>`; }); html += `</ul><h3>5. Objectif</h3><p>${scenarioData.objective}</p>`;
-                 html += `<br><p><strong>À vous de jouer !</strong></p><button id="btnSolution">Afficher la solution</button>`;
+                 scenarioData.subnets.forEach(s => { html += `<li><strong>${s.name} :</strong> ${s.hosts} hôtes</li>`; }); html += `</ul>`;
+                 html += `<h3>3. Contraintes</h3><ul>`;
+                 scenarioData.constraints.forEach(c => { html += `<li>${c}</li>`; }); html += `</ul></div>`;
+                 html += `<div class="scenario-col">`;
+                 html += `<h3>4. Services</h3><ul>`;
+                 scenarioData.services.forEach(s => { html += `<li>${s}</li>`; }); html += `</ul><h3>5. Objectif</h3><p>${scenarioData.objective}</p></div></div>`;
+                 
+                 html += `<div style="text-align: center; margin-top: 30px;"><p><strong>À vous de jouer !</strong></p><button id="btnSolution">Afficher la solution</button></div>`;
                  outputDiv.innerHTML = html; outputDiv.style.display = 'block';
                  
                  scenarioNotepadContainer.style.display = 'block';
@@ -874,7 +931,6 @@
                  document.getElementById('scenarioNotepad').value = notes;
                  document.getElementById('scenarioNotepadStatus').textContent = "";
                  
-                 document.getElementById('btnSolution')?.addEventListener('click', displaySolution); document.getElementById('saveFavoriteBtn')?.addEventListener('click', () => toggleFavorite('scenario'));
                  const btnSol = document.getElementById('btnSolution');
                  if (btnSol) btnSol.onclick = displaySolution;
                  const saveFavBtn = document.getElementById('saveFavoriteBtn');
@@ -1225,15 +1281,93 @@
                 return { nextHopIp: null, exitInterface: null }; 
             }
 
+            function generateRoutingTopologySVG(topology) {
+                const svgWidth = 1000;
+                const svgHeight = 600;
+                let svg = `<div style="width: 100%; overflow-x: auto; margin-bottom: 30px; padding: 0; border: 1px solid var(--controls-border); border-radius: 8px; background: var(--bg-container); box-shadow: 0 2px 5px var(--shadow-color);">`;
+                svg += `<svg viewBox="0 0 ${svgWidth} ${svgHeight}" style="width: 100%; max-width: 100%; height: auto; min-width: 800px; display: block; margin: auto; font-family: 'Courier New', Courier, monospace;">`;
+
+                // Grille Blueprint
+                svg += `<defs><pattern id="bpGrid2" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="var(--accent-secondary)" stroke-width="0.5" opacity="0.3"/></pattern></defs>`;
+                svg += `<rect width="100%" height="100%" fill="url(#bpGrid2)" />`;
+
+                const coords = {};
+                const isStar = topology.links.some(l => topology.links.filter(lk => lk.r1 === l.r1 || lk.r2 === l.r1).length >= 2);
+
+                if (isStar && topology.routers.length > 2) {
+                coords['R1'] = { x: svgWidth / 2, y: svgHeight / 2 - 40 };
+                    const spokes = topology.routers.filter(r => r !== 'R1');
+                    const angleStep = Math.PI * 2 / spokes.length;
+                    spokes.forEach((r, i) => {
+                        coords[r] = {
+                        x: svgWidth / 2 + 280 * Math.cos(i * angleStep + Math.PI/2),
+                        y: svgHeight / 2 - 40 + 180 * Math.sin(i * angleStep + Math.PI/2)
+                        };
+                    });
+                } else {
+                    const stepX = svgWidth / (topology.routers.length + 1);
+                    topology.routers.forEach((r, i) => {
+                        coords[r] = { x: stepX * (i + 1), y: svgHeight / 2 };
+                    });
+                }
+
+                topology.links.forEach(link => {
+                    const p1 = coords[link.r1];
+                    const p2 = coords[link.r2];
+                    
+                    // Câble technique
+                    svg += `<line x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}" stroke="var(--accent-primary)" stroke-width="2" stroke-dasharray="6,6" opacity="0.8"/>`;
+                    
+                    const mx = (p1.x + p2.x) / 2;
+                    const my = (p1.y + p2.y) / 2;
+                    svg += `<rect x="${mx - 85}" y="${my - 14}" width="170" height="28" fill="var(--bg-container)" stroke="var(--text-primary)" stroke-width="1" />`;
+                    svg += `<text x="${mx}" y="${my + 5}" fill="var(--text-primary)" font-size="16" font-weight="bold" text-anchor="middle">${link.network}</text>`;
+                });
+
+                topology.lans.forEach(lan => {
+                    const p = coords[lan.connectedTo];
+                    const isTop = p.y >= svgHeight / 2;
+                    const lanY = isTop ? p.y - 120 : p.y + 120;
+                    
+                    svg += `<line x1="${p.x}" y1="${p.y}" x2="${p.x}" y2="${lanY - 25}" stroke="var(--accent-primary)" stroke-width="2" stroke-dasharray="8,4" opacity="0.8"/>`;
+                    svg += `<circle cx="${p.x}" cy="${lanY - 25}" r="5" fill="var(--accent-primary)" />`;
+                    
+                    // Switch Blueprint (Boîte avec croix)
+                    svg += `<rect x="${p.x - 45}" y="${lanY - 20}" width="90" height="40" fill="var(--bg-container)" stroke="var(--text-primary)" stroke-width="2" />`;
+                    svg += `<line x1="${p.x - 45}" y1="${lanY - 20}" x2="${p.x + 45}" y2="${lanY + 20}" stroke="var(--text-primary)" stroke-width="1" opacity="0.3"/>`;
+                    svg += `<line x1="${p.x - 45}" y1="${lanY + 20}" x2="${p.x + 45}" y2="${lanY - 20}" stroke="var(--text-primary)" stroke-width="1" opacity="0.3"/>`;
+                    svg += `<rect x="${p.x - 20}" y="${lanY - 10}" width="40" height="20" fill="var(--bg-container)" />`;
+                    svg += `<text x="${p.x}" y="${lanY + 6}" fill="var(--text-primary)" font-size="16" font-weight="bold" text-anchor="middle">SW</text>`;
+                    
+                    // Textes (Nom du LAN et IP)
+                    svg += `<text x="${p.x}" y="${isTop ? lanY - 35 : lanY + 45}" fill="var(--accent-secondary)" font-size="18" font-weight="bold" text-anchor="middle">[ ${lan.name.toUpperCase()} ]</text>`;
+                    svg += `<text x="${p.x}" y="${isTop ? lanY - 50 : lanY + 65}" fill="var(--text-secondary)" font-size="16" text-anchor="middle">${lan.network}</text>`;
+                });
+
+                topology.routers.forEach(r => {
+                    const p = coords[r];
+                    // Routeur Blueprint (Wireframe avec Réticule)
+                    svg += `<circle cx="${p.x}" cy="${p.y}" r="45" fill="var(--bg-container)" stroke="var(--accent-primary)" stroke-width="2" />`;
+                    svg += `<circle cx="${p.x}" cy="${p.y}" r="35" fill="none" stroke="var(--accent-secondary)" stroke-width="1" stroke-dasharray="4,4" />`;
+                    svg += `<path d="M ${p.x} ${p.y-55} L ${p.x} ${p.y+55} M ${p.x-55} ${p.y} L ${p.x+55} ${p.y}" stroke="var(--accent-primary)" stroke-width="1" opacity="0.5"/>`;
+                    svg += `<rect x="${p.x-25}" y="${p.y-12}" width="50" height="24" fill="var(--bg-container)" />`;
+                    svg += `<text x="${p.x}" y="${p.y+6}" fill="var(--text-primary)" font-size="20" font-weight="bold" text-anchor="middle">${r}</text>`;
+                });
+
+                svg += `</svg></div>`;
+                return svg;
+            }
+
             function displayRoutingExercise(exerciseData) { 
                 routingExerciseOutput.innerHTML = ''; 
+                localStorage.setItem('activeRouting', JSON.stringify(exerciseData));
                 const isFav = isFavorite(exerciseData, 'routing'); const starIcon = isFav ? '★' : '☆'; const starClass = isFav ? 'is-favorite' : '';
                 const titleEl = document.createElement('div'); titleEl.className = 'scenario-title'; titleEl.style.width = '100%'; titleEl.style.marginBottom = '20px';
                 titleEl.innerHTML = `<h2>${exerciseData.title}</h2><span id="saveRoutingFavoriteBtn" class="favorite-star ${starClass}" title="Ajouter/Retirer des favoris">${starIcon}</span>`;
                 routingExerciseOutput.appendChild(titleEl);
-                document.getElementById('saveRoutingFavoriteBtn')?.addEventListener('click', () => toggleFavorite('routing'));
                 const saveRoutingFavBtn = document.getElementById('saveRoutingFavoriteBtn');
                 if (saveRoutingFavBtn) saveRoutingFavBtn.onclick = () => toggleFavorite('routing');
+                
                 for (const routerName in exerciseData.tables) {
                     const tableData = exerciseData.tables[routerName]; const container = document.createElement('div'); container.className = 'routing-table-container';
                     let tableHTML = `<table class="routing-table"><caption>${routerName}</caption><thead><tr><th>Type</th><th>IDSR</th><th>CIDR</th><th>INTERFACE</th><th>PASSERELLE</th></tr></thead><tbody>`;
@@ -1366,16 +1500,18 @@
                     alert("Erreur : Le réseau de base doit être au format IP/CIDR valide.");
                     return;
                 }
-                const baseIp = networkParts[0];
                 const baseCidr = parseInt(networkParts[1], 10);
+                const inputIpLong = ipToLong(networkParts[0]);
+                const maskLong = ipToLong(cidrToMask(baseCidr));
+                const baseIpLong = (inputIpLong & maskLong) >>> 0;
+                const baseIp = longToIp(baseIpLong);
                 
                 let exerciseData = {};
                 
                 if (segType === 'hosts') {
-                    const hostsStr = document.getElementById('customSegHosts').value;
-                    const requirements = parseVLSMInput(hostsStr); 
+                    const requirements = parseHostInputsForm('customSegHostsContainer'); 
                     if (requirements.length === 0) {
-                        alert("Erreur : Veuillez entrer au moins un besoin en hôte valide.");
+                        alert("Erreur : Veuillez remplir au moins un besoin en hôte.");
                         return;
                     }
                     exerciseData = {
@@ -1415,10 +1551,9 @@
                  const isFav = isFavorite(exerciseData, 'segmentation');
                  const starIcon = isFav ? '★' : '☆';
                  const starClass = isFav ? 'is-favorite' : '';
-
-                 if (!window.loadingFavorite) { 
-                    currentSegmentationExercise = exerciseData; 
-                 }
+                 
+                 localStorage.setItem('activeSegmentation', JSON.stringify(exerciseData));
+                 currentSegmentationExercise = exerciseData; 
 
                  let promptHTML = `
                     <div class="scenario-title"> 
@@ -1490,7 +1625,6 @@
                  btnCheckSegmentationSolution.style.display = 'inline-block';      
                  btnShowSegmentationSolution.style.display = 'inline-block'; 
                  
-                 document.getElementById('saveSegmentationFavoriteBtn')?.addEventListener('click', () => toggleFavorite('segmentation'));
                  const saveSegFavBtn = document.getElementById('saveSegmentationFavoriteBtn');
                  if (saveSegFavBtn) saveSegFavBtn.onclick = () => toggleFavorite('segmentation');
             }
@@ -1702,8 +1836,8 @@
 
                 if (selection !== 'all') {
                     const parts = selection.split('-');
-                    minIndex = parseInt(parts[0], 10);
-                    maxIndex = parseInt(parts[1], 10);
+                    minIndex = Math.min(parseInt(parts[0], 10), quizQuestions.length);
+                    maxIndex = Math.min(parseInt(parts[1], 10), quizQuestions.length);
                 }
 
                 // 2. Vérifier si toutes les questions DE CETTE CATÉGORIE ont été posées
@@ -1875,27 +2009,35 @@
                 const textarea = document.getElementById(textareaId);
                 const statusEl = document.getElementById(statusId);
                 
+                function saveCurrentNote() {
+                    let currentItem;
+                    let notepads;
+                    if(type === 'scenario') { currentItem = currentScenario; notepads = scenarioNotepads; }
+                    else if(type === 'routing') { currentItem = currentRoutingExercise; notepads = routingNotepads; }
+                    else if(type === 'segmentation') { currentItem = currentSegmentationExercise; notepads = segmentationNotepads; }
+                    else return;
+                    
+                    if (!currentItem || !currentItem.id) return;
+                    
+                    notepads[currentItem.id] = textarea.value;
+                    saveNotepad(type);
+                }
+
                 if (saveButton) {
                     saveButton.addEventListener('click', () => {
-                        let currentItem;
-                        let notepads;
-                        if(type === 'scenario') { currentItem = currentScenario; notepads = scenarioNotepads; }
-                        else if(type === 'routing') { currentItem = currentRoutingExercise; notepads = routingNotepads; }
-                        else if(type === 'segmentation') { currentItem = currentSegmentationExercise; notepads = segmentationNotepads; }
-                        else return;
-                        
-                        if (!currentItem || !currentItem.id) {
-                            statusEl.textContent = "Erreur: Aucun exercice chargé.";
-                            statusEl.style.color = "var(--error-text)";
-                            return;
-                        }
-                        
-                        notepads[currentItem.id] = textarea.value;
-                        saveNotepad(type);
-                        
+                        saveCurrentNote();
                         statusEl.textContent = "Sauvegardé !";
                         statusEl.style.color = "var(--correct-text)";
                         setTimeout(() => { statusEl.textContent = ""; }, 2000);
+                    });
+                }
+
+                if (textarea) {
+                    textarea.addEventListener('input', () => {
+                        saveCurrentNote();
+                        statusEl.textContent = "Sauvegarde auto...";
+                        statusEl.style.color = "var(--text-secondary)";
+                        setTimeout(() => { if(statusEl.textContent === "Sauvegarde auto...") statusEl.textContent = ""; }, 1500);
                     });
                 }
             }
@@ -1943,6 +2085,40 @@
                     }
                 });
             }
+
+            loadFavorites();
+            // --- RESTAURATION DE LA SESSION ACTIVE ---
+            function restoreActiveSessions() {
+                try {
+                    const savedScenario = JSON.parse(localStorage.getItem('activeScenario'));
+                    if (savedScenario && savedScenario.baseNetwork) {
+                        currentScenario = savedScenario;
+                        currentDifficulty = savedScenario.difficulty;
+                        currentGatewayRule = savedScenario.gatewayRule;
+                        displayScenario(savedScenario, true);
+                    }
+
+                    const savedRouting = JSON.parse(localStorage.getItem('activeRouting'));
+                    if (savedRouting && savedRouting.topology) {
+                        currentRoutingExercise = savedRouting;
+                        displayRoutingExercise(savedRouting);
+                    }
+
+                    const savedSegmentation = JSON.parse(localStorage.getItem('activeSegmentation'));
+                    if (savedSegmentation && savedSegmentation.baseIp) {
+                        currentSegmentationExercise = savedSegmentation;
+                        if (savedSegmentation.subType === 'network') {
+                            currentSegmentationSolution = calculateSegmentationByNetworkSolution(savedSegmentation.baseIp, savedSegmentation.baseCidr, savedSegmentation.N);
+                        } else {
+                            currentSegmentationSolution = calculateVLSM(savedSegmentation.baseIp, savedSegmentation.baseCidr, savedSegmentation.requirements);
+                        }
+                        displaySegmentationExercise(savedSegmentation);
+                    }
+                } catch (e) {
+                    console.error("Erreur de restauration de la session active", e);
+                }
+            }
+            restoreActiveSessions();
 
             // Gestion de l'URL au chargement initial (Placé à la fin pour éviter les erreurs d'initialisation)
             const initialHash = window.location.hash.substring(1);
